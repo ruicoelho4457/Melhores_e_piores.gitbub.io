@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movers — Mercado, Alertas 15m & Detalhes</title>
+<meta name="theme-color" content="#0A0D12">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Crypto Movers">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0D12; --panel:#11151D; --panel-2:#161B26; --line:#232A38;
+    --text:#E7EAF0; --muted:#7B879B; --gain:#2FD9A6; --gain-dim:#17402F;
+    --loss:#FF6B5E; --loss-dim:#402019; --amber:#F0A93E; --blue:#58A6FF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:60px}
+  button,select{font:inherit}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  .ticker-wrap{background:var(--panel-2);border-bottom:1px solid var(--line);overflow:hidden;white-space:nowrap;padding:9px 0}
+  .ticker-track{display:inline-block;animation:scroll-left 40s linear infinite}
+  .ticker-wrap:hover .ticker-track{animation-play-state:paused}
+  @keyframes scroll-left{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  .ticker-item{display:inline-flex;align-items:baseline;gap:6px;padding:0 18px;font-size:12.5px;font-family:'IBM Plex Mono',monospace;letter-spacing:.02em}
+  .ticker-item .sym{color:var(--muted);font-weight:600}.ticker-item .pct.up{color:var(--gain)}.ticker-item .pct.down{color:var(--loss)}
+
+  header{max-width:1180px;margin:0 auto;padding:34px 20px 22px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;border-bottom:1px solid var(--line)}
+  .title-block h1{font-size:26px;font-weight:700;letter-spacing:-.01em}.title-block .sub{color:var(--muted);font-size:13px;margin-top:4px;font-family:'IBM Plex Mono',monospace}
+  .status{text-align:right;font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;max-width:520px}
+  .status .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gain);margin-right:6px;box-shadow:0 0 8px var(--gain)}
+  .status.stale .dot{background:var(--muted);box-shadow:none}.status.error .dot{background:var(--loss);box-shadow:0 0 6px var(--loss)}
+
+  .controls{max-width:1180px;margin:0 auto;padding:18px 20px 0;display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end}
+  .field{display:flex;flex-direction:column;gap:5px}.field label{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+  select,.btn,.switch-btn{background:var(--panel);border:1px solid var(--line);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:8px 12px;border-radius:6px;cursor:pointer}
+  select:hover,.btn:hover,.switch-btn:hover{border-color:var(--amber)}
+  select:focus-visible,.btn:focus-visible,.switch-btn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--amber);border-color:var(--amber);background:transparent}
+  .btn.secondary{color:var(--blue);border-color:var(--blue)}.btn:disabled{opacity:.5;cursor:default}
+  .btn .spin{width:11px;height:11px;border-radius:50%;border:2px solid var(--amber);border-top-color:transparent;display:none}.btn.loading .spin{display:inline-block;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+  .auto{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);padding-bottom:1px}
+  .switch-btn{width:38px;height:22px;padding:0;border-radius:20px;position:relative;background:var(--panel)}
+  .switch-btn::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--muted);transition:.15s ease}
+  .switch-btn[aria-checked="true"]{border-color:var(--gain)}.switch-btn[aria-checked="true"]::after{background:var(--gain);left:19px}
+
+  .alert-panel{max-width:1180px;margin:22px auto 0;padding:0 20px}
+  .alert-card{background:linear-gradient(180deg,rgba(240,169,62,.06),rgba(17,21,29,1));border:1px solid rgba(240,169,62,.45);border-radius:10px;overflow:hidden}
+  .alert-head{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+  .alert-title{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14px}.alert-title .bell{color:var(--amber)}
+  .alert-meta{font:11px 'IBM Plex Mono',monospace;color:var(--muted);line-height:1.5}.alert-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .alert-body{padding:0}.alert-empty{padding:26px 18px;color:var(--muted);font-size:13px;text-align:center}
+  .signal{display:grid;grid-template-columns:minmax(150px,1.4fr) repeat(4,minmax(70px,.7fr)) minmax(85px,.8fr) minmax(85px,.8fr);gap:8px;align-items:center;padding:11px 18px;border-bottom:1px solid var(--line);font:12px 'IBM Plex Mono',monospace}
+  .signal:last-child{border-bottom:none}.signal:hover{background:rgba(255,255,255,.02)}.signal.clickable{cursor:pointer}.signal.clickable:focus-visible{outline:2px solid var(--amber);outline-offset:-2px;background:rgba(255,255,255,.035)}.signal .coin-name{font-family:'Inter',sans-serif;font-weight:600}.signal .coin-name small{display:block;color:var(--muted);font:10.5px 'IBM Plex Mono',monospace;margin-top:2px}.signal .seg{color:var(--gain);font-weight:700}.signal .total{color:var(--amber);font-weight:700}.signal .time{color:var(--muted);text-align:right}
+  .signal-labels{display:grid;grid-template-columns:minmax(150px,1.4fr) repeat(4,minmax(70px,.7fr)) minmax(85px,.8fr) minmax(85px,.8fr);gap:8px;padding:8px 18px;color:var(--muted);font:9.5px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line)}.signal-labels span:last-child{text-align:right}
+
+  .board{max-width:1180px;margin:22px auto 0;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:20px}.col{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}.col-head{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+  .col-head h2{font-size:14px;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:8px}.col-head .arrow{font-size:15px}.col.gainers .col-head .arrow{color:var(--gain)}.col.losers .col-head .arrow{color:var(--loss)}.col-head .count{font:11px 'IBM Plex Mono',monospace;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;table-layout:auto}thead th{text-align:left;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;padding:8px 8px;border-bottom:1px solid var(--line);white-space:nowrap}thead th.num,tbody td.num{text-align:right}thead th.rank-col{width:24px;padding-right:0}thead th.mc-col,tbody td.mc{width:48px}thead th.vol-col,tbody td.vol{width:78px}
+  tbody tr{border-bottom:1px solid var(--line)}tbody tr:last-child{border-bottom:none}tbody tr:hover{background:var(--panel-2)}tbody tr.coin-row{cursor:pointer}tbody tr.coin-row:focus-visible{outline:2px solid var(--amber);outline-offset:-2px;background:var(--panel-2)}tbody td{padding:10px 8px;font-size:12.5px;vertical-align:middle;overflow:hidden}.rank{color:var(--muted);font:11px 'IBM Plex Mono',monospace;width:24px;padding-right:0}.mc{color:var(--muted);font:10.5px 'IBM Plex Mono',monospace}.coin{display:flex;align-items:center;gap:7px;min-width:0}.coin img{width:18px;height:18px;border-radius:50%;flex-shrink:0}.coin .names{min-width:0;overflow:hidden}.coin .nm{font-weight:600;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:145px}.coin .sy{color:var(--muted);font:10px 'IBM Plex Mono',monospace;display:block}td.price,td.pct,td.vol{font-family:'IBM Plex Mono',monospace;white-space:nowrap}td.price{font-size:11.5px}td.pct{font-weight:700;font-size:11.5px}.col.gainers td.pct.p24{color:var(--gain)}.col.losers td.pct.p24{color:var(--loss)}td.pct.p1.up{color:var(--gain)}td.pct.p1.down{color:var(--loss)}td.vol{color:var(--muted);font-size:10.5px}.empty,.err{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px}.err{color:var(--loss)}
+
+
+  .modal[hidden]{display:none}.modal{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(3,6,10,.78);backdrop-filter:blur(5px)}
+  .detail-dialog{width:min(920px,100%);max-height:min(92vh,900px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+  .detail-head{position:sticky;top:0;z-index:2;background:rgba(17,21,29,.97);backdrop-filter:blur(8px);display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 20px;border-bottom:1px solid var(--line)}
+  .detail-identity{display:flex;gap:12px;align-items:center;min-width:0}.detail-identity img{width:42px;height:42px;border-radius:50%;flex:0 0 auto}.detail-name{font-size:20px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.detail-sub{margin-top:3px;color:var(--muted);font:11px 'IBM Plex Mono',monospace}.detail-status{margin-top:7px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;font:10.5px 'IBM Plex Mono',monospace;color:var(--muted)}.detail-status.active{border-color:var(--gain);color:var(--gain);background:rgba(47,217,166,.06)}
+  .icon-btn{flex:0 0 auto;width:34px;height:34px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--text);cursor:pointer;font-size:20px;line-height:1}.icon-btn:hover{border-color:var(--amber);color:var(--amber)}.icon-btn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .detail-body{padding:18px 20px 22px}.detail-loading,.detail-error{padding:44px 10px;text-align:center;color:var(--muted);font:12px 'IBM Plex Mono',monospace}.detail-error{color:var(--loss)}
+  .stat-grid{display:grid;grid-template-columns:repeat(5,minmax(110px,1fr));gap:9px}.stat{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:10px 11px;min-width:0}.stat-label{color:var(--muted);font:9.5px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.05em}.stat-value{margin-top:5px;font:600 13px 'IBM Plex Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stat-value.up{color:var(--gain)}.stat-value.down{color:var(--loss)}
+  .detail-section{margin-top:18px}.detail-section-title{font-size:12px;font-weight:700;margin-bottom:9px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}.detail-section-title small{color:var(--muted);font:10px 'IBM Plex Mono',monospace;font-weight:400}
+  .segment-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.segment-box{border:1px solid var(--line);border-radius:8px;background:var(--panel-2);padding:11px}.segment-box.ok{border-color:rgba(47,217,166,.55);background:rgba(47,217,166,.045)}.segment-box .seg-lbl{color:var(--muted);font:9.5px 'IBM Plex Mono',monospace}.segment-box .seg-val{margin-top:5px;font:700 14px 'IBM Plex Mono',monospace}.segment-box.ok .seg-val{color:var(--gain)}
+  .chart-wrap{height:250px;border:1px solid var(--line);border-radius:9px;background:var(--panel-2);padding:10px;overflow:hidden}.chart-wrap canvas{display:block;width:100%;height:100%}
+  .detail-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}.detail-note{color:var(--muted);font:10.5px 'IBM Plex Mono',monospace}.external-link{display:inline-flex;align-items:center;gap:6px;color:var(--blue);text-decoration:none;border:1px solid var(--blue);border-radius:6px;padding:7px 10px;font:600 11px 'IBM Plex Mono',monospace}.external-link:hover{background:rgba(88,166,255,.06)}
+
+  .toast-wrap{position:fixed;right:18px;bottom:18px;z-index:999;display:flex;flex-direction:column;gap:8px;max-width:min(390px,calc(100vw - 36px))}.toast{background:var(--panel-2);border:1px solid var(--amber);border-radius:8px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.35);font-size:12px;line-height:1.45}.toast strong{color:var(--amber)}
+  footer{max-width:1180px;margin:22px auto 0;padding:0 20px;color:var(--muted);font:11px 'IBM Plex Mono',monospace;line-height:1.55}
+
+  @media(max-width:900px){.signal,.signal-labels{grid-template-columns:minmax(140px,1.5fr) repeat(4,minmax(62px,.7fr)) minmax(78px,.8fr)}.signal .time,.signal-labels span:last-child{display:none}}
+  @media(max-width:780px){.board{grid-template-columns:1fr}header{flex-direction:column;align-items:flex-start}.status{text-align:left}.controls{gap:12px}.alert-actions{width:100%}}
+  @media(max-width:600px){.modal{padding:0;align-items:flex-end}.detail-dialog{border-radius:14px 14px 0 0;max-height:94vh}.detail-head{padding:14px}.detail-body{padding:14px}.stat-grid{grid-template-columns:repeat(2,1fr)}.segment-grid{grid-template-columns:repeat(2,1fr)}.chart-wrap{height:210px}body{padding-bottom:35px}header{padding-top:24px}.title-block h1{font-size:22px}.controls{display:grid;grid-template-columns:1fr 1fr}.field select{width:100%}.controls>.btn{justify-content:center}.auto{grid-column:span 2}.signal-labels{display:none}.signal{grid-template-columns:1fr 1fr 1fr;padding:10px 12px}.signal .coin-name{grid-column:1/-1}.signal .seg:nth-of-type(4),.signal .seg:nth-of-type(5){display:none}.signal .time{display:block;text-align:right}.mc-col,td.mc,.vol-col,td.vol{display:none}thead th{padding:7px 5px;font-size:8.5px}tbody td{padding:8px 5px}.coin img{width:16px;height:16px}.coin .nm{font-size:11.5px;max-width:30vw}.coin .sy{font-size:9px}td.price,td.pct{font-size:10.5px}.col-head{padding:11px 12px}.col-head h2{font-size:12.5px}.alert-head{padding:12px}.alert-meta{font-size:10px}}
+  @media(max-width:390px){.detail-name{font-size:17px}.stat-grid{grid-template-columns:1fr 1fr}.controls{grid-template-columns:1fr}.auto{grid-column:auto}.coin .nm{max-width:25vw}thead th.oneh,tbody td.oneh{display:none}}
+  @media(prefers-reduced-motion:reduce){.ticker-track{animation:none}.btn .spin{animation:none}}
+</style>
+</head>
+<body>
+  <div class="ticker-wrap" aria-label="Ticker de mercado"><div class="ticker-track" id="tickerTrack"></div></div>
+
+  <header>
+    <div class="title-block">
+      <h1>Melhores &amp; Piores do Dia</h1>
+      <div class="sub" id="subLine">variação 24h · a carregar universo de mercado…</div>
+    </div>
+    <div class="status stale" id="statusLine"><span class="dot"></span>a iniciar…</div>
+  </header>
+
+  <div class="controls">
+    <div class="field"><label for="universeSel">Universo</label><select id="universeSel"><option value="100">Top 100 por market cap</option><option value="250" selected>Top 250 por market cap</option><option value="500">Top 500 por market cap</option><option value="1000">Top 1000 por market cap</option></select></div>
+    <div class="field"><label for="volSel">Volume 24h mínimo</label><select id="volSel"><option value="0">Sem filtro</option><option value="100000">&gt; 100k</option><option value="1000000" selected>&gt; 1M</option><option value="10000000">&gt; 10M</option></select></div>
+    <div class="field"><label for="countSel">Linhas por coluna</label><select id="countSel"><option value="8">8</option><option value="10" selected>10</option><option value="15">15</option><option value="20">20</option></select></div>
+    <div class="field"><label for="currencySel">Moeda</label><select id="currencySel"><option value="usd" selected>USD ($)</option><option value="eur">EUR (€)</option></select></div>
+    <button class="btn" id="refreshBtn" type="button"><span class="spin" aria-hidden="true"></span><span id="refreshLabel">Atualizar agora</span></button>
+    <div class="auto"><span>Auto-refresh 90s</span><button class="switch-btn" id="autoSwitch" type="button" role="switch" aria-checked="true" aria-label="Ativar ou desativar atualização automática"></button></div>
+  </div>
+
+  <section class="alert-panel" aria-labelledby="alertTitle">
+    <div class="alert-card">
+      <div class="alert-head">
+        <div>
+          <div class="alert-title" id="alertTitle"><span class="bell">●</span> Alerta de momentum — 4 × 15 min</div>
+          <div class="alert-meta">DISPARA APENAS SE CADA UM DOS 4 PERÍODOS CONSECUTIVOS DE 15 MIN SUBIR &gt; 2,00% · mínimo composto teórico em 1h: +8,24%</div>
+        </div>
+        <div class="alert-actions">
+          <span class="alert-meta" id="alertScanStatus">a aguardar dados…</span>
+          <button class="btn secondary" id="notifyBtn" type="button">Ativar notificações Push</button>
+          <button class="btn secondary" id="installBtn" type="button" hidden>Instalar aplicação</button>
+        </div>
+      </div>
+      <div class="alert-body" id="alertBody"><div class="alert-empty">Ainda não existem sinais confirmados nesta sessão.</div></div>
+    </div>
+  </section>
+
+  <div class="board">
+    <div class="col gainers"><div class="col-head"><h2><span class="arrow">▲</span> Melhores Performers</h2><span class="count" id="gainCount">—</span></div><table><thead><tr><th class="rank-col"></th><th class="mc-col">MC#</th><th>Moeda</th><th class="num">Preço</th><th class="num oneh">1h</th><th class="num">24h</th><th class="num vol-col">Volume</th></tr></thead><tbody id="gainersBody"></tbody></table></div>
+    <div class="col losers"><div class="col-head"><h2><span class="arrow">▼</span> Piores Performers</h2><span class="count" id="loseCount">—</span></div><table><thead><tr><th class="rank-col"></th><th class="mc-col">MC#</th><th>Moeda</th><th class="num">Preço</th><th class="num oneh">1h</th><th class="num">24h</th><th class="num vol-col">Volume</th></tr></thead><tbody id="losersBody"></tbody></table></div>
+  </div>
+
+
+  <div class="modal" id="coinModal" hidden>
+    <section class="detail-dialog" id="detailDialog" role="dialog" aria-modal="true" aria-labelledby="detailName">
+      <div class="detail-head">
+        <div class="detail-identity">
+          <img id="detailImage" alt="" hidden>
+          <div style="min-width:0">
+            <div class="detail-name" id="detailName">Moeda</div>
+            <div class="detail-sub" id="detailSub">—</div>
+            <div class="detail-status" id="detailAlertStatus">a analisar…</div>
+          </div>
+        </div>
+        <button class="icon-btn" id="detailClose" type="button" aria-label="Fechar detalhes">×</button>
+      </div>
+      <div class="detail-body" id="detailBody"><div class="detail-loading">A carregar histórico intradiário…</div></div>
+    </section>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+  <footer>Dados: CoinGecko API. O alerta usa a variação agregada de 1h como pré-filtro e valida quatro períodos consecutivos de 15 minutos através do histórico intradiário. O modo PWA permite notificações Push enviadas pelo servidor mesmo quando o painel não está aberto, desde que a aplicação esteja instalada/autorizada e o servidor permaneça online. Clica numa moeda ou num alerta para abrir a ficha detalhada. Não é aconselhamento de investimento.</footer>
+
+<script>
+'use strict';
+
+const CONFIG = Object.freeze({
+  AUTO_MS: 90000,
+  FETCH_TIMEOUT_MS: 10000,
+  PAGE_DELAY_MS: 350,
+  CHART_DELAY_MS: 300,
+  CHART_CACHE_MS: 90000,
+  ALERT_THRESHOLD: 2,
+  ALERT_SEGMENTS: 4,
+  // 4 períodos >2% => mínimo composto ≈ 8,2432%. Usa-se 7,5% apenas como pré-filtro
+  // para tolerar pequenas diferenças temporais entre endpoints; a validação final continua estrita.
+  ALERT_PREFILTER_1H: 7.5,
+  ALERT_HISTORY_DAYS: 1,
+  CACHE_MAX_AGE_MS: 15 * 60 * 1000,
+  MARKET_CACHE_KEY: 'movers-dashboard-market-v3',
+  SETTINGS_KEY: 'movers-dashboard-settings-v2'
+});
+
+const state = {
+  data: [], autoRefresh: true, timer: null, loading: false, lastUpdated: null,
+  currency: 'usd', alertSignals: [], notifiedBuckets: new Set(), chartCache: new Map(),
+  audioCtx: null, consecutiveFailures: 0, alertScanning: false, detailCoinId: null, detailRequestToken: 0, deferredInstall: null, swRegistration: null
+};
+
+const $ = id => document.getElementById(id);
+const universeSel=$('universeSel'), volSel=$('volSel'), countSel=$('countSel'), currencySel=$('currencySel');
+const refreshBtn=$('refreshBtn'), refreshLabel=$('refreshLabel'), autoSwitch=$('autoSwitch'), statusLine=$('statusLine'), subLine=$('subLine');
+const gainersBody=$('gainersBody'), losersBody=$('losersBody'), gainCount=$('gainCount'), loseCount=$('loseCount'), tickerTrack=$('tickerTrack');
+const alertBody=$('alertBody'), alertScanStatus=$('alertScanStatus'), notifyBtn=$('notifyBtn'), installBtn=$('installBtn'), toastWrap=$('toastWrap');
+const coinModal=$('coinModal'), detailDialog=$('detailDialog'), detailClose=$('detailClose'), detailBody=$('detailBody'), detailName=$('detailName'), detailSub=$('detailSub'), detailImage=$('detailImage'), detailAlertStatus=$('detailAlertStatus');
+
+function el(tag, className='', text=''){
+  const node=document.createElement(tag);
+  if(className) node.className=className;
+  if(text !== '') node.textContent=String(text);
+  return node;
+}
+
+function currencySymbol(){ return state.currency === 'eur' ? '€' : '$'; }
+function fmtPrice(p){
+  if(p == null || !Number.isFinite(Number(p))) return '—';
+  p=Number(p); const s=currencySymbol();
+  if(p>=1000) return s+p.toLocaleString('en-US',{maximumFractionDigits:0});
+  if(p>=1) return s+p.toFixed(2);
+  if(p>=0.01) return s+p.toFixed(4);
+  return s+p.toPrecision(3);
+}
+function fmtVol(v){
+  if(v == null || !Number.isFinite(Number(v))) return '—';
+  v=Number(v); const s=currencySymbol();
+  if(v>=1e9) return s+(v/1e9).toFixed(2)+'B';
+  if(v>=1e6) return s+(v/1e6).toFixed(1)+'M';
+  if(v>=1e3) return s+(v/1e3).toFixed(0)+'K';
+  return s+v.toFixed(0);
+}
+function fmtPct(p){
+  if(p == null || !Number.isFinite(Number(p))) return '—';
+  p=Number(p); return (p>0?'+':'')+p.toFixed(2)+'%';
+}
+function fmtAge(ts){
+  if(!ts) return '—'; const sec=Math.max(0,Math.floor((Date.now()-ts)/1000));
+  if(sec<60) return sec+'s'; if(sec<3600) return Math.floor(sec/60)+'min'; return Math.floor(sec/3600)+'h';
+}
+function fmtCompact(v){
+  if(v == null || !Number.isFinite(Number(v))) return '—';
+  v=Number(v); const s=currencySymbol();
+  if(v>=1e12) return s+(v/1e12).toFixed(2)+'T';
+  if(v>=1e9) return s+(v/1e9).toFixed(2)+'B';
+  if(v>=1e6) return s+(v/1e6).toFixed(2)+'M';
+  if(v>=1e3) return s+(v/1e3).toFixed(1)+'K';
+  return s+v.toFixed(0);
+}
+function pctClass(v){ return Number(v)>0?'up':Number(v)<0?'down':''; }
+function activateCoinElement(node,c){
+  node.classList.add('coin-row'); node.tabIndex=0; node.setAttribute('role','button'); node.setAttribute('aria-label','Abrir detalhes de '+(c.name||c.symbol||'moeda'));
+  node.addEventListener('click',()=>openCoinDetail(c));
+  node.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openCoinDetail(c); } });
+}
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+function compactCoin(c){
+  return {
+    id:c.id, symbol:c.symbol, name:c.name, image:c.image, current_price:c.current_price,
+    market_cap:c.market_cap, market_cap_rank:c.market_cap_rank, total_volume:c.total_volume,
+    high_24h:c.high_24h, low_24h:c.low_24h,
+    price_change_percentage_24h:c.price_change_percentage_24h,
+    price_change_percentage_1h_in_currency:c.price_change_percentage_1h_in_currency,
+    last_updated:c.last_updated
+  };
+}
+
+function saveSettings(){
+  try{ localStorage.setItem(CONFIG.SETTINGS_KEY,JSON.stringify({universe:universeSel.value,vol:volSel.value,count:countSel.value,currency:currencySel.value,auto:state.autoRefresh})); }catch(_){ }
+}
+function loadSettings(){
+  try{
+    const s=JSON.parse(localStorage.getItem(CONFIG.SETTINGS_KEY)||'null'); if(!s) return;
+    if([...universeSel.options].some(o=>o.value===String(s.universe))) universeSel.value=String(s.universe);
+    if([...volSel.options].some(o=>o.value===String(s.vol))) volSel.value=String(s.vol);
+    if([...countSel.options].some(o=>o.value===String(s.count))) countSel.value=String(s.count);
+    if([...currencySel.options].some(o=>o.value===String(s.currency))) currencySel.value=String(s.currency);
+    state.currency=currencySel.value; if(typeof s.auto==='boolean') state.autoRefresh=s.auto;
+  }catch(_){ }
+}
+function saveMarketCache(){
+  try{
+    const payload={ts:Date.now(),currency:state.currency,universe:Number(universeSel.value),data:state.data.map(compactCoin)};
+    localStorage.setItem(CONFIG.MARKET_CACHE_KEY,JSON.stringify(payload));
+  }catch(_){ }
+}
+function loadMarketCache(){
+  try{
+    const c=JSON.parse(localStorage.getItem(CONFIG.MARKET_CACHE_KEY)||'null');
+    if(!c || !Array.isArray(c.data) || Date.now()-c.ts>CONFIG.CACHE_MAX_AGE_MS) return false;
+    if(c.currency!==state.currency || Number(c.universe)!==Number(universeSel.value)) return false;
+    state.data=c.data; state.lastUpdated=c.ts; render();
+    setStatus(`cache local · ${fmtAge(c.ts)} atrás`, 'stale');
+    return true;
+  }catch(_){ return false; }
+}
+
+function setStatus(text,type='ok'){
+  statusLine.className='status'+(type==='stale'?' stale':type==='error'?' error':'');
+  statusLine.replaceChildren(el('span','dot'),document.createTextNode(text));
+}
+
+async function fetchJSON(url,{timeout=CONFIG.FETCH_TIMEOUT_MS,retries=2}={}){
+  let lastErr;
+  for(let attempt=0;attempt<=retries;attempt++){
+    const ctrl=new AbortController(); const timer=setTimeout(()=>ctrl.abort(),timeout);
+    try{
+      const res=await fetch(url,{signal:ctrl.signal,headers:{'Accept':'application/json'}});
+      clearTimeout(timer);
+      if(res.status===429){ const e=new Error('RATE_LIMIT'); e.status=429; throw e; }
+      if(!res.ok){ const e=new Error('HTTP_'+res.status); e.status=res.status; throw e; }
+      return await res.json();
+    }catch(err){
+      clearTimeout(timer); lastErr=err;
+      const retryable=err?.name==='AbortError'||err?.status===429||(err?.status>=500&&err?.status<=599)||err instanceof TypeError;
+      if(!retryable || attempt===retries) break;
+      const wait=err?.status===429 ? 2500*Math.pow(2,attempt) : 700*Math.pow(2,attempt);
+      await sleep(wait);
+    }
+  }
+  throw lastErr || new Error('UNKNOWN_FETCH_ERROR');
+}
+
+function describeError(err){
+  if(err?.name==='AbortError') return 'tempo limite do pedido excedido';
+  if(err?.message==='RATE_LIMIT'||err?.status===429) return 'limite de pedidos da CoinGecko atingido';
+  if(String(err?.message||'').startsWith('HTTP_')) return 'API respondeu '+String(err.message).replace('HTTP_','HTTP ');
+  if(err instanceof TypeError) return 'falha de rede ou bloqueio CORS';
+  return err?.message || 'erro desconhecido';
+}
+
+async function fetchMarket(){
+  const universe=parseInt(universeSel.value,10), perPage=250, pages=Math.ceil(universe/perPage); let all=[];
+  for(let p=1;p<=pages;p++){
+    const url=`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${encodeURIComponent(state.currency)}&order=market_cap_desc&per_page=${perPage}&page=${p}&price_change_percentage=1h,24h&sparkline=false`;
+    const batch=await fetchJSON(url,{retries:2});
+    if(!Array.isArray(batch)) throw new Error('resposta de mercado inválida');
+    all=all.concat(batch); if(batch.length<perPage) break; if(p<pages) await sleep(CONFIG.PAGE_DELAY_MS);
+  }
+  return all.slice(0,universe).map(compactCoin);
+}
+
+function filteredData(){
+  const minVol=parseInt(volSel.value,10);
+  return state.data.filter(c=>c.price_change_percentage_24h!=null&&(c.total_volume||0)>=minVol);
+}
+
+function buildCoinCell(c){
+  const wrap=el('div','coin'); const img=el('img'); img.alt=''; img.loading='lazy';
+  // Só URLs https são aceites para imagens externas.
+  if(typeof c.image==='string' && c.image.startsWith('https://')) img.src=c.image; else img.hidden=true;
+  img.addEventListener('error',()=>{img.hidden=true},{once:true});
+  const names=el('div','names'); names.append(el('span','nm',c.name||'—'),el('span','sy',String(c.symbol||'').toUpperCase())); wrap.append(img,names); return wrap;
+}
+
+function buildRow(c,i){
+  const tr=el('tr');
+  const rank=el('td','rank',i+1), mc=el('td','mc',c.market_cap_rank?('#'+c.market_cap_rank):'—'), coinTd=el('td'); coinTd.append(buildCoinCell(c));
+  const price=el('td','price num',fmtPrice(c.current_price));
+  const p1val=c.price_change_percentage_1h_in_currency; const p1=el('td','pct p1 oneh num '+(p1val>=0?'up':'down'),fmtPct(p1val));
+  const p24=el('td','pct p24 num',fmtPct(c.price_change_percentage_24h)); const vol=el('td','vol num vol-col',fmtVol(c.total_volume));
+  tr.append(rank,mc,coinTd,price,p1,p24,vol); activateCoinElement(tr,c); return tr;
+}
+
+function renderTable(tbody,rows){
+  tbody.replaceChildren();
+  if(!rows.length){ const tr=el('tr'),td=el('td','empty','Sem resultados com os filtros atuais'); td.colSpan=7; tr.append(td); tbody.append(tr); return; }
+  const frag=document.createDocumentFragment(); rows.forEach((c,i)=>frag.append(buildRow(c,i))); tbody.append(frag);
+}
+
+function renderTicker(gainers,losers){
+  tickerTrack.replaceChildren(); const set=[...gainers.slice(0,6),...losers.slice(0,6)];
+  if(!set.length) return;
+  const addSet=()=>set.forEach(c=>{
+    const item=el('span','ticker-item'),sym=el('span','sym',String(c.symbol||'').toUpperCase()),price=el('span','',fmtPrice(c.current_price));
+    const pctVal=c.price_change_percentage_24h,pct=el('span','pct '+(pctVal>=0?'up':'down'),fmtPct(pctVal)); item.append(sym,price,pct); item.style.cursor='pointer'; item.tabIndex=0; item.setAttribute('role','button'); item.setAttribute('aria-label','Abrir detalhes de '+c.name); item.addEventListener('click',()=>openCoinDetail(c)); item.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openCoinDetail(c)}}); tickerTrack.append(item);
+  });
+  addSet(); addSet();
+}
+
+function render(){
+  const filtered=filteredData(),rows=parseInt(countSel.value,10);
+  const gainers=[...filtered].sort((a,b)=>b.price_change_percentage_24h-a.price_change_percentage_24h).slice(0,rows);
+  const losers=[...filtered].sort((a,b)=>a.price_change_percentage_24h-b.price_change_percentage_24h).slice(0,rows);
+  gainCount.textContent=filtered.length+' elegíveis'; loseCount.textContent=filtered.length+' elegíveis';
+  renderTable(gainersBody,gainers); renderTable(losersBody,losers); renderTicker(gainers,losers);
+  subLine.textContent=`variação 24h · ${state.data.length} moedas no universo · ${filtered.length} após filtro de volume · dados ${state.lastUpdated?fmtAge(state.lastUpdated)+' atrás':'—'}`;
+}
+
+function marketChartCacheKey(id){ return state.currency+':'+id; }
+async function fetchOneDayChart(id){
+  const key=marketChartCacheKey(id),cached=state.chartCache.get(key);
+  if(cached && Date.now()-cached.ts<CONFIG.CHART_CACHE_MS) return cached.prices;
+  const url=`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(id)}/market_chart?vs_currency=${encodeURIComponent(state.currency)}&days=${CONFIG.ALERT_HISTORY_DAYS}`;
+  const data=await fetchJSON(url,{retries:1});
+  if(!Array.isArray(data?.prices)||data.prices.length<10) throw new Error('histórico intradiário insuficiente');
+  const prices=data.prices.filter(x=>Array.isArray(x)&&Number.isFinite(Number(x[0]))&&Number.isFinite(Number(x[1]))).map(x=>[Number(x[0]),Number(x[1])]).sort((a,b)=>a[0]-b[0]);
+  state.chartCache.set(key,{ts:Date.now(),prices}); return prices;
+}
+
+function priceAtOrBefore(prices,target,maxGapMs=8*60*1000){
+  let lo=0,hi=prices.length-1,best=null;
+  while(lo<=hi){ const mid=(lo+hi)>>1; if(prices[mid][0]<=target){best=prices[mid];lo=mid+1}else hi=mid-1; }
+  if(!best || target-best[0]>maxGapMs) return null; return best;
+}
+
+function validateFourSegments(prices){
+  if(!prices.length) return null;
+  const end=prices[prices.length-1]; const endTs=end[0]; const sampled=[];
+  for(let mins=60;mins>=0;mins-=15){ const p=priceAtOrBefore(prices,endTs-mins*60*1000); if(!p) return null; sampled.push(p); }
+  const changes=[];
+  for(let i=0;i<4;i++) changes.push((sampled[i+1][1]/sampled[i][1]-1)*100);
+  const valid=changes.every(x=>x>CONFIG.ALERT_THRESHOLD); const total=(sampled[4][1]/sampled[0][1]-1)*100;
+  return {valid,changes,total,endTs,current:sampled[4][1],sampled};
+}
+
+function changeOverMinutes(prices,minutes){
+  if(!prices.length) return null; const end=prices[prices.length-1]; const start=priceAtOrBefore(prices,end[0]-minutes*60*1000);
+  return start ? (end[1]/start[1]-1)*100 : null;
+}
+function closeCoinDetail(){
+  if(coinModal.hidden) return; coinModal.hidden=true; state.detailCoinId=null; state.detailRequestToken++; document.body.style.overflow='';
+}
+function drawDetailChart(canvas,prices){
+  if(!canvas || !prices?.length) return;
+  const rect=canvas.getBoundingClientRect(), dpr=Math.min(window.devicePixelRatio||1,2), w=Math.max(280,Math.round(rect.width*dpr)), h=Math.max(160,Math.round(rect.height*dpr));
+  canvas.width=w; canvas.height=h; const ctx=canvas.getContext('2d'); if(!ctx) return;
+  const vals=prices.map(p=>p[1]).filter(Number.isFinite); if(vals.length<2) return; const min=Math.min(...vals),max=Math.max(...vals),span=max-min||1,pad=18*dpr;
+  const root=getComputedStyle(document.documentElement), line=root.getPropertyValue('--gain').trim()||'#2FD9A6', grid=root.getPropertyValue('--line').trim()||'#232A38', muted=root.getPropertyValue('--muted').trim()||'#7B879B';
+  ctx.clearRect(0,0,w,h); ctx.strokeStyle=grid; ctx.lineWidth=1*dpr;
+  for(let i=1;i<4;i++){const y=pad+(h-2*pad)*i/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke()}
+  ctx.strokeStyle=line; ctx.lineWidth=2*dpr; ctx.beginPath();
+  prices.forEach((p,i)=>{const x=pad+(w-2*pad)*(i/(prices.length-1)),y=pad+(h-2*pad)*(1-(p[1]-min)/span); if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}); ctx.stroke();
+  ctx.fillStyle=muted; ctx.font=`${10*dpr}px IBM Plex Mono, monospace`; ctx.textBaseline='top'; ctx.fillText(fmtPrice(max),pad,2*dpr); ctx.textBaseline='bottom'; ctx.fillText(fmtPrice(min),pad,h-2*dpr);
+}
+function makeStat(label,value,cls=''){
+  const box=el('div','stat'),l=el('div','stat-label',label),v=el('div','stat-value '+cls,value); box.append(l,v); return box;
+}
+function renderCoinDetail(c,prices){
+  const seg=validateFourSegments(prices), p15=changeOverMinutes(prices,15),p30=changeOverMinutes(prices,30),p45=changeOverMinutes(prices,45),p60=changeOverMinutes(prices,60);
+  detailAlertStatus.className='detail-status'+(seg?.valid?' active':''); detailAlertStatus.textContent=seg?.valid?'● ALERTA 4 × 15 MIN ATIVO':'Sem alerta 4 × 15 min';
+  const frag=document.createDocumentFragment(), stats=el('div','stat-grid');
+  stats.append(makeStat('Preço',fmtPrice(c.current_price)),makeStat('15 min',fmtPct(p15),pctClass(p15)),makeStat('30 min',fmtPct(p30),pctClass(p30)),makeStat('45 min',fmtPct(p45),pctClass(p45)),makeStat('1 hora',fmtPct(p60),pctClass(p60)),makeStat('24 horas',fmtPct(c.price_change_percentage_24h),pctClass(c.price_change_percentage_24h)),makeStat('Market cap',fmtCompact(c.market_cap)),makeStat('Volume 24h',fmtCompact(c.total_volume)),makeStat('Máximo 24h',fmtPrice(c.high_24h)),makeStat('Mínimo 24h',fmtPrice(c.low_24h))); frag.append(stats);
+  const segSection=el('section','detail-section'),segTitle=el('div','detail-section-title'); segTitle.append(document.createTextNode('Quatro períodos consecutivos de 15 minutos'),el('small','', 'critério: cada período > +2,00%')); segSection.append(segTitle);
+  const segGrid=el('div','segment-grid'); (seg?.changes||[null,null,null,null]).forEach((v,i)=>{const b=el('div','segment-box'+(Number(v)>CONFIG.ALERT_THRESHOLD?' ok':'')); b.append(el('div','seg-lbl','15m #'+(i+1)),el('div','seg-val',fmtPct(v))); segGrid.append(b)}); segSection.append(segGrid); frag.append(segSection);
+  const chartSection=el('section','detail-section'), chartTitle=el('div','detail-section-title'); chartTitle.append(document.createTextNode('Evolução intradiária — últimas 24h'),el('small','',prices.length+' pontos históricos')); const wrap=el('div','chart-wrap'),canvas=el('canvas'); canvas.setAttribute('aria-label','Gráfico de preço das últimas 24 horas'); wrap.append(canvas); chartSection.append(chartTitle,wrap); frag.append(chartSection);
+  const actions=el('div','detail-actions'),note=el('div','detail-note','Histórico atualizado conforme disponibilidade da CoinGecko.'),link=el('a','external-link','Abrir na CoinGecko ↗'); link.href='https://www.coingecko.com/en/coins/'+encodeURIComponent(c.id); link.target='_blank'; link.rel='noopener noreferrer'; actions.append(note,link); frag.append(actions);
+  detailBody.replaceChildren(frag); requestAnimationFrame(()=>drawDetailChart(canvas,prices));
+}
+async function openCoinDetail(c){
+  if(!c?.id) return; const token=++state.detailRequestToken; state.detailCoinId=c.id;
+  detailName.textContent=c.name||String(c.symbol||'').toUpperCase()||'Moeda'; detailSub.textContent=String(c.symbol||'').toUpperCase()+' · MC# '+(c.market_cap_rank||'—'); detailAlertStatus.className='detail-status'; detailAlertStatus.textContent='a analisar…';
+  if(typeof c.image==='string'&&c.image.startsWith('https://')){detailImage.src=c.image;detailImage.hidden=false}else detailImage.hidden=true;
+  detailBody.replaceChildren(el('div','detail-loading','A carregar histórico intradiário…')); coinModal.hidden=false; document.body.style.overflow='hidden'; detailClose.focus({preventScroll:true});
+  try{ const prices=await fetchOneDayChart(c.id); if(token!==state.detailRequestToken||coinModal.hidden) return; const live=state.data.find(x=>x.id===c.id)||c; renderCoinDetail(live,prices); }
+  catch(err){ if(token!==state.detailRequestToken||coinModal.hidden) return; detailAlertStatus.textContent='Histórico indisponível'; detailBody.replaceChildren(el('div','detail-error','Não foi possível carregar o histórico: '+describeError(err))); }
+}
+
+function renderAlerts(){
+  alertBody.replaceChildren();
+  if(!state.alertSignals.length){ alertBody.append(el('div','alert-empty','Ainda não existem sinais confirmados nesta sessão.')); return; }
+  const labels=el('div','signal-labels'); ['Moeda','15m #1','15m #2','15m #3','15m #4','Total 1h','Hora'].forEach(t=>labels.append(el('span','',t))); alertBody.append(labels);
+  state.alertSignals.slice(0,20).forEach(s=>{
+    const row=el('div','signal'); const coin=el('div','coin-name',s.name); coin.append(el('small','',String(s.symbol).toUpperCase()+' · MC# '+(s.marketCapRank||'—')));
+    row.append(coin); s.changes.forEach(v=>row.append(el('div','seg',fmtPct(v)))); row.append(el('div','total',fmtPct(s.total)),el('div','time',new Date(s.endTs).toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'})));
+    row.classList.add('clickable'); row.tabIndex=0; row.setAttribute('role','button'); row.setAttribute('aria-label','Abrir detalhes de '+s.name);
+    const open=()=>{ const c=state.data.find(x=>x.id===s.id)||{id:s.id,name:s.name,symbol:s.symbol,market_cap_rank:s.marketCapRank,current_price:s.current}; openCoinDetail(c); };
+    row.addEventListener('click',open); row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}}); alertBody.append(row);
+  });
+}
+
+function toast(message){
+  const t=el('div','toast'); t.append(el('strong','', 'ALERTA 15m'),document.createTextNode(' · '+message)); toastWrap.append(t); setTimeout(()=>t.remove(),9000);
+}
+function beep(){
+  try{
+    if(!state.audioCtx) state.audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    const osc=state.audioCtx.createOscillator(),gain=state.audioCtx.createGain(); osc.frequency.value=880; gain.gain.setValueAtTime(.06,state.audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(.001,state.audioCtx.currentTime+.35); osc.connect(gain); gain.connect(state.audioCtx.destination); osc.start(); osc.stop(state.audioCtx.currentTime+.35);
+  }catch(_){ }
+}
+function notifySignal(signal){
+  const msg=`${signal.name}: ${signal.changes.map(v=>fmtPct(v)).join(' · ')} | 1h ${fmtPct(signal.total)}`; toast(msg); beep();
+  // A notificação Push principal é enviada pelo backend. Enquanto o painel está aberto,
+  // esta chamada dá feedback imediato e usa o Service Worker quando disponível.
+  if('Notification' in window && Notification.permission==='granted' && state.swRegistration){
+    const bucket=Math.floor(signal.endTs/(15*60*1000));
+    state.swRegistration.showNotification('Momentum 4 × 15 min confirmado',{
+      body:msg, tag:`momentum-${signal.id}-${bucket}`, icon:'/icon-192.png', badge:'/icon-192.png',
+      data:{url:'/?coin='+encodeURIComponent(signal.id),coinId:signal.id}, renotify:false
+    }).catch(()=>{});
+  }
+}
+
+async function scanAlerts(){
+  if(state.alertScanning) return;
+  state.alertScanning=true;
+  try{
+    const eligible=filteredData();
+    const candidates=eligible.filter(c=>Number(c.price_change_percentage_1h_in_currency)>=CONFIG.ALERT_PREFILTER_1H).sort((a,b)=>b.price_change_percentage_1h_in_currency-a.price_change_percentage_1h_in_currency);
+    if(!candidates.length){ alertScanStatus.textContent='0 candidatas no pré-filtro 1h'; return; }
+    alertScanStatus.textContent=`a validar ${candidates.length} candidata${candidates.length===1?'':'s'}…`;
+    let confirmed=0, failed=0;
+    for(let i=0;i<candidates.length;i++){
+      const c=candidates[i];
+      try{
+        const prices=await fetchOneDayChart(c.id),check=validateFourSegments(prices);
+        if(check?.valid){
+          confirmed++; const bucket=Math.floor(check.endTs/(15*60*1000)); const key=c.id+':'+bucket;
+          const signal={id:c.id,name:c.name,symbol:c.symbol,marketCapRank:c.market_cap_rank,changes:check.changes,total:check.total,endTs:check.endTs,current:check.current};
+          const existing=state.alertSignals.findIndex(s=>s.id===signal.id&&Math.floor(s.endTs/(15*60*1000))===bucket);
+          if(existing>=0) state.alertSignals[existing]=signal; else state.alertSignals.unshift(signal);
+          if(!state.notifiedBuckets.has(key)){ state.notifiedBuckets.add(key); notifySignal(signal); }
+        }
+      }catch(_){ failed++; }
+      if(i<candidates.length-1) await sleep(CONFIG.CHART_DELAY_MS);
+    }
+    state.alertSignals.sort((a,b)=>b.endTs-a.endTs); renderAlerts();
+    alertScanStatus.textContent=`${confirmed} sinal${confirmed===1?'':'is'} · ${candidates.length} validada${candidates.length===1?'':'s'}${failed?' · '+failed+' falha(s)':''}`;
+  }finally{
+    state.alertScanning=false;
+  }
+}
+
+function scheduleNext(){
+  clearTimeout(state.timer); state.timer=null;
+  if(!state.autoRefresh || document.hidden) return;
+  state.timer=setTimeout(()=>refresh({auto:true}),CONFIG.AUTO_MS);
+}
+
+async function refresh({auto=false}={}){
+  if(state.loading){ scheduleNext(); return; }
+  state.loading=true; refreshBtn.classList.add('loading'); refreshBtn.disabled=true; refreshLabel.textContent='A atualizar…'; setStatus('a atualizar…','stale');
+  try{
+    state.data=await fetchMarket(); state.lastUpdated=Date.now(); state.consecutiveFailures=0; saveMarketCache(); render();
+    setStatus('atualizado às '+new Date(state.lastUpdated).toLocaleTimeString('pt-PT'),'ok');
+    await scanAlerts();
+    loadServerAlerts();
+  }catch(err){
+    state.consecutiveFailures++;
+    if(state.data.length===0){
+      gainersBody.replaceChildren(); const tr=el('tr'),td=el('td','err','Falha ao carregar dados: '+describeError(err)); td.colSpan=7; tr.append(td); gainersBody.append(tr); losersBody.replaceChildren();
+    }
+    setStatus('erro: '+describeError(err)+(state.data.length?' · últimos dados válidos mantidos':''),'error');
+    if(auto && err?.status===429) toast('Limite da API atingido. Os últimos dados válidos foram mantidos.');
+  }finally{
+    state.loading=false; refreshBtn.classList.remove('loading'); refreshBtn.disabled=false; refreshLabel.textContent='Atualizar agora'; scheduleNext();
+  }
+}
+
+async function getPushSubscription(){
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+  const reg=state.swRegistration || await navigator.serviceWorker.ready;
+  state.swRegistration=reg;
+  return await reg.pushManager.getSubscription();
+}
+function urlBase64ToUint8Array(base64String){
+  const padding='='.repeat((4-base64String.length%4)%4);
+  const base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');
+  const raw=atob(base64); const out=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) out[i]=raw.charCodeAt(i);
+  return out;
+}
+async function requestNotifications(){
+  beep();
+  if(!window.isSecureContext){ toast('As notificações Push exigem HTTPS.'); notifyBtn.textContent='HTTPS necessário'; return; }
+  if(!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)){
+    notifyBtn.textContent='Push indisponível neste browser'; return;
+  }
+  try{
+    const permission=await Notification.requestPermission();
+    if(permission!=='granted'){
+      notifyBtn.textContent=permission==='denied'?'Notificações bloqueadas':'Ativar notificações Push'; return;
+    }
+    const reg=state.swRegistration || await navigator.serviceWorker.ready; state.swRegistration=reg;
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub){
+      const keyRes=await fetch('/api/vapid-public-key',{headers:{Accept:'application/json'}});
+      if(!keyRes.ok) throw new Error('Servidor Push indisponível');
+      const {publicKey}=await keyRes.json();
+      sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(publicKey)});
+    }
+    const res=await fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subscription:sub,userAgent:navigator.userAgent})});
+    if(!res.ok) throw new Error('Não foi possível registar a subscrição Push');
+    notifyBtn.textContent='Notificações Push ativas'; notifyBtn.disabled=true;
+    toast('Notificações Push ativas. O servidor enviará os alertas mesmo com o painel fechado.');
+  }catch(err){
+    notifyBtn.textContent='Tentar ativar Push'; toast(err?.message||'Falha ao ativar notificações Push.');
+  }
+}
+async function loadServerAlerts(){
+  try{
+    const res=await fetch('/api/alerts',{headers:{Accept:'application/json'}}); if(!res.ok) return;
+    const payload=await res.json(); if(!Array.isArray(payload?.alerts)) return;
+    for(const a of payload.alerts){
+      if(!a?.id||!Array.isArray(a.changes)) continue;
+      const exists=state.alertSignals.some(s=>s.id===a.id&&Math.floor(s.endTs/(15*60*1000))===Math.floor(Number(a.endTs)/(15*60*1000)));
+      if(!exists) state.alertSignals.push({...a,endTs:Number(a.endTs)});
+    }
+    state.alertSignals.sort((a,b)=>b.endTs-a.endTs); state.alertSignals=state.alertSignals.slice(0,50); renderAlerts();
+  }catch(_){ }
+}
+async function setupPWA(){
+  if('serviceWorker' in navigator){
+    try{
+      state.swRegistration=await navigator.serviceWorker.register('/service-worker.js',{scope:'/'});
+      await navigator.serviceWorker.ready;
+      const sub=await getPushSubscription();
+      if(sub && Notification.permission==='granted'){
+        notifyBtn.textContent='Notificações Push ativas'; notifyBtn.disabled=true;
+        // Renovar silenciosamente o registo no backend após atualizações/redeploys.
+        fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subscription:sub,userAgent:navigator.userAgent})}).catch(()=>{});
+      }
+    }catch(_){ }
+  }
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();state.deferredInstall=e;installBtn.hidden=false;});
+  window.addEventListener('appinstalled',()=>{installBtn.hidden=true;state.deferredInstall=null;toast('Aplicação instalada.');});
+  installBtn.addEventListener('click',async()=>{
+    if(state.deferredInstall){state.deferredInstall.prompt();await state.deferredInstall.userChoice;state.deferredInstall=null;installBtn.hidden=true;return;}
+    const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    toast(isiOS?'No iPhone/iPad: Partilhar → Adicionar ao ecrã principal.':'Usa a opção do browser “Instalar aplicação” ou “Adicionar ao ecrã principal”.');
+  });
+}
+
+detailClose.addEventListener('click',closeCoinDetail);
+coinModal.addEventListener('click',e=>{if(e.target===coinModal) closeCoinDetail();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!coinModal.hidden) closeCoinDetail();});
+window.addEventListener('resize',()=>{if(!coinModal.hidden&&state.detailCoinId){const canvas=detailBody.querySelector('canvas');const cached=state.chartCache.get(marketChartCacheKey(state.detailCoinId));if(canvas&&cached?.prices) drawDetailChart(canvas,cached.prices);}});
+
+refreshBtn.addEventListener('click',()=>refresh());
+universeSel.addEventListener('change',()=>{saveSettings();state.chartCache.clear();refresh();});
+volSel.addEventListener('change',()=>{saveSettings();render();scanAlerts();});
+countSel.addEventListener('change',()=>{saveSettings();render();});
+currencySel.addEventListener('change',()=>{state.currency=currencySel.value;saveSettings();state.chartCache.clear();refresh();});
+autoSwitch.addEventListener('click',()=>{state.autoRefresh=!state.autoRefresh;autoSwitch.setAttribute('aria-checked',String(state.autoRefresh));saveSettings();scheduleNext();});
+notifyBtn.addEventListener('click',requestNotifications);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden && state.autoRefresh){ if(!state.lastUpdated || Date.now()-state.lastUpdated>CONFIG.AUTO_MS) refresh({auto:true}); else scheduleNext(); } else clearTimeout(state.timer);});
+window.addEventListener('storage',e=>{if(e.key===CONFIG.MARKET_CACHE_KEY && !state.loading){loadMarketCache();}});
+
+loadSettings(); autoSwitch.setAttribute('aria-checked',String(state.autoRefresh)); state.currency=currencySel.value;
+setupPWA(); loadServerAlerts(); loadMarketCache(); refresh().then(()=>{try{const q=new URLSearchParams(location.search),id=q.get('coin');if(id){const c=state.data.find(x=>x.id===id);if(c) openCoinDetail(c);}}catch(_){}});
+</script>
+</body>
+</html>

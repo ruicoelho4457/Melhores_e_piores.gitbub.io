@@ -1,0 +1,15 @@
+{
+  "name": "Crypto Movers — Alertas 4 × 15 min",
+  "short_name": "Crypto Movers",
+  "description": "Dashboard de mercado com alertas de momentum: quatro períodos consecutivos de 15 minutos acima de +2%.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0A0D12",
+  "theme_color": "#0A0D12",
+  "lang": "pt-PT",
+  "icons": [
+    {"src":"/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
