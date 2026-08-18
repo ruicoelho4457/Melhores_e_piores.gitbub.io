@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Movers — Mercado, Alertas 15m & Detalhes</title>
+<title>Movers — Scanner Pine 4H · 1D · 1W</title>
 <meta name="theme-color" content="#0A0D12">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -85,6 +85,27 @@
   @media(max-width:600px){.modal{padding:0;align-items:flex-end}.detail-dialog{border-radius:14px 14px 0 0;max-height:94vh}.detail-head{padding:14px}.detail-body{padding:14px}.stat-grid{grid-template-columns:repeat(2,1fr)}.segment-grid{grid-template-columns:repeat(2,1fr)}.chart-wrap{height:210px}body{padding-bottom:35px}header{padding-top:24px}.title-block h1{font-size:22px}.controls{display:grid;grid-template-columns:1fr 1fr}.field select{width:100%}.controls>.btn{justify-content:center}.auto{grid-column:span 2}.signal-labels{display:none}.signal{grid-template-columns:1fr 1fr 1fr;padding:10px 12px}.signal .coin-name{grid-column:1/-1}.signal .seg:nth-of-type(4),.signal .seg:nth-of-type(5){display:none}.signal .time{display:block;text-align:right}.mc-col,td.mc,.vol-col,td.vol{display:none}thead th{padding:7px 5px;font-size:8.5px}tbody td{padding:8px 5px}.coin img{width:16px;height:16px}.coin .nm{font-size:11.5px;max-width:30vw}.coin .sy{font-size:9px}td.price,td.pct{font-size:10.5px}.col-head{padding:11px 12px}.col-head h2{font-size:12.5px}.alert-head{padding:12px}.alert-meta{font-size:10px}}
   @media(max-width:390px){.detail-name{font-size:17px}.stat-grid{grid-template-columns:1fr 1fr}.controls{grid-template-columns:1fr}.auto{grid-column:auto}.coin .nm{max-width:25vw}thead th.oneh,tbody td.oneh{display:none}}
   @media(prefers-reduced-motion:reduce){.ticker-track{animation:none}.btn .spin{animation:none}}
+
+
+  /* ---- Scanner técnico Pine v11-R: 4H · 1D · 1W ---- */
+  .tech-signal-labels,.tech-signal{display:grid;grid-template-columns:minmax(150px,1.3fr) 52px 62px 64px minmax(220px,2fr) 104px;gap:10px;align-items:center}
+  .tech-signal-labels{padding:8px 18px;color:var(--muted);font:9.5px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line)}
+  .tech-signal{padding:11px 18px;border-bottom:1px solid var(--line);font:11.5px 'IBM Plex Mono',monospace;cursor:pointer}
+  .tech-signal:last-child{border-bottom:none}.tech-signal:hover{background:rgba(255,255,255,.025)}.tech-signal:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+  .tech-signal .coin-name{font-family:'Inter',sans-serif;font-weight:600}.tech-signal .coin-name small{display:block;color:var(--muted);font:10px 'IBM Plex Mono',monospace;margin-top:2px}
+  .tf-pill,.dir-pill{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:999px;padding:4px 7px;font-weight:700}
+  .tf-pill{color:var(--blue)}.dir-pill.buy{color:var(--gain);border-color:rgba(47,217,166,.55);background:rgba(47,217,166,.08)}.dir-pill.sell{color:var(--loss);border-color:rgba(255,107,94,.55);background:rgba(255,107,94,.08)}
+  .tech-score{font-weight:700}.tech-criteria{color:var(--muted);line-height:1.45;white-space:normal}.tech-close{color:var(--muted);text-align:right}
+  .tech-summary{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px}.summary-chip{font:10px 'IBM Plex Mono',monospace;border:1px solid var(--line);border-radius:999px;padding:4px 7px;color:var(--muted)}
+  .scanner-progress{height:3px;background:var(--line);overflow:hidden}.scanner-progress>span{display:block;height:100%;width:0;background:var(--amber);transition:width .2s ease}
+  .tech-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tech-tf-card{border:1px solid var(--line);border-radius:9px;padding:12px;background:var(--panel-2)}
+  .tech-tf-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:9px}.tech-tf-name{font:700 12px 'IBM Plex Mono',monospace;color:var(--blue)}
+  .tech-state{font:700 10px 'IBM Plex Mono',monospace;border-radius:999px;padding:3px 7px;border:1px solid var(--line);color:var(--muted)}.tech-state.buy{color:var(--gain);border-color:rgba(47,217,166,.5)}.tech-state.sell{color:var(--loss);border-color:rgba(255,107,94,.5)}
+  .tech-scores{display:flex;gap:10px;font:11px 'IBM Plex Mono',monospace;margin-bottom:7px}.tech-scores .buy{color:var(--gain)}.tech-scores .sell{color:var(--loss)}
+  .tech-reasons{color:var(--muted);font:10px 'IBM Plex Mono',monospace;line-height:1.5;min-height:31px}.tech-source{margin-top:8px;color:var(--muted);font:9.5px 'IBM Plex Mono',monospace}
+  @media(max-width:850px){.tech-signal-labels,.tech-signal{grid-template-columns:minmax(130px,1.2fr) 48px 58px 58px minmax(160px,1.5fr)}.tech-signal-labels span:last-child,.tech-signal .tech-close{display:none}}
+  @media(max-width:600px){.tech-signal-labels{display:none}.tech-signal{grid-template-columns:1fr 56px 62px 58px;padding:10px 12px}.tech-signal .coin-name{grid-column:1/-1}.tech-signal .tech-criteria{grid-column:1/-1}.tech-detail-grid{grid-template-columns:1fr}.alert-actions .btn{font-size:11px;padding:7px 9px}}
+
 </style>
 </head>
 <body>
@@ -111,16 +132,19 @@
     <div class="alert-card">
       <div class="alert-head">
         <div>
-          <div class="alert-title" id="alertTitle"><span class="bell">●</span> Alerta de momentum — 4 × 15 min</div>
-          <div class="alert-meta">DISPARA APENAS SE CADA UM DOS 4 PERÍODOS CONSECUTIVOS DE 15 MIN SUBIR &gt; 2,00% · mínimo composto teórico em 1h: +8,24%</div>
+          <div class="alert-title" id="alertTitle"><span class="bell">●</span> Scanner de confluência — 4H · Diário · Semanal</div>
+          <div class="alert-meta">PINE v11-R · score mínimo 3 · cooldown 6 barras · apenas velas fechadas · dados Binance Spot USDT</div>
+          <div class="tech-summary"><span class="summary-chip">4H: cooldown 24h</span><span class="summary-chip">1D: cooldown 6 dias</span><span class="summary-chip">1W: cooldown 6 semanas</span></div>
         </div>
         <div class="alert-actions">
           <span class="alert-meta" id="alertScanStatus">a aguardar dados…</span>
-          <button class="btn secondary" id="notifyBtn" type="button">Ativar notificações Push</button>
+          <button class="btn" id="scannerBtn" type="button">Analisar sinais</button>
+          <button class="btn secondary" id="notifyBtn" type="button">Ativar notificações</button>
           <button class="btn secondary" id="installBtn" type="button" hidden>Instalar aplicação</button>
         </div>
       </div>
-      <div class="alert-body" id="alertBody"><div class="alert-empty">Ainda não existem sinais confirmados nesta sessão.</div></div>
+      <div class="scanner-progress" aria-hidden="true"><span id="scannerProgress"></span></div>
+      <div class="alert-body" id="alertBody"><div class="alert-empty">Ainda não existem sinais BUY/SELL confirmados nas últimas velas fechadas.</div></div>
     </div>
   </section>
 
@@ -148,7 +172,7 @@
   </div>
 
   <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
-  <footer>Dados: CoinGecko API. O alerta usa a variação agregada de 1h como pré-filtro e valida quatro períodos consecutivos de 15 minutos através do histórico intradiário. O modo PWA permite notificações Push enviadas pelo servidor mesmo quando o painel não está aberto, desde que a aplicação esteja instalada/autorizada e o servidor permaneça online. Clica numa moeda ou num alerta para abrir a ficha detalhada. Não é aconselhamento de investimento.</footer>
+  <footer>Dados de mercado geral: CoinGecko. Scanner técnico: candles Binance Spot USDT, apenas velas fechadas, nos timeframes 4H, 1D e 1W. A lógica de BUY/SELL replica o sistema de pontuação do Pine Script v11-R fornecido, com score mínimo 3 e cooldown de 6 barras. Moedas sem par USDT compatível na Binance não entram no scanner. Não é aconselhamento de investimento.</footer>
 
 <script>
 'use strict';
@@ -157,31 +181,64 @@ const CONFIG = Object.freeze({
   AUTO_MS: 90000,
   FETCH_TIMEOUT_MS: 10000,
   PAGE_DELAY_MS: 350,
-  CHART_DELAY_MS: 300,
+  CHART_DELAY_MS: 250,
   CHART_CACHE_MS: 90000,
   HISTORY_UNAVAILABLE_CACHE_MS: 10 * 60 * 1000,
-  ALERT_THRESHOLD: 2,
-  ALERT_SEGMENTS: 4,
-  // 4 períodos >2% => mínimo composto ≈ 8,2432%. Usa-se 7,5% apenas como pré-filtro
-  // para tolerar pequenas diferenças temporais entre endpoints; a validação final continua estrita.
-  ALERT_PREFILTER_1H: 7.5,
   ALERT_HISTORY_DAYS: 1,
   CACHE_MAX_AGE_MS: 15 * 60 * 1000,
   MARKET_CACHE_KEY: 'movers-dashboard-market-v3',
-  SETTINGS_KEY: 'movers-dashboard-settings-v2'
+  SETTINGS_KEY: 'movers-dashboard-settings-v2',
+
+  // Pine v11-R — parâmetros originais, alterando apenas cooldown de 8 para 6.
+  TECH_MIN_SCORE: 3,
+  TECH_COOLDOWN: 6,
+  TECH_SCAN_MIN_MS: 15 * 60 * 1000,
+  TECH_ANALYSIS_CACHE_MS: 15 * 60 * 1000,
+  TECH_CONCURRENCY: 4,
+  TECH_4H_LIMIT: 500,
+  TECH_1D_LIMIT: 500,
+  TECH_1W_LIMIT: 180,
+  TECH_CACHE_KEY: 'movers-tech-signals-v6',
+  TECH_NOTIFIED_KEY: 'movers-tech-notified-v6',
+  BINANCE_BASES: ['https://data-api.binance.vision','https://api.binance.com'],
+
+  EMA_FAST: 21,
+  EMA_SLOW: 72,
+  ATR_LEN: 14,
+  COMPRESSION_THRESHOLD: 0.003,
+  COMPRESSION_ATR_LEN: 14,
+  COMPRESSION_ATR_AVG: 14,
+  CVD_LOOKBACK: 50,
+  CVD_SMOOTH: 5,
+  STOCH_K: 14,
+  STOCH_D: 3,
+  STOCH_SMOOTH: 3,
+  STOCH_OVERSOLD: 25,
+  STOCH_OVERBOUGHT: 75,
+  EXT_THRESHOLD: 2.5,
+  ROC_LENGTH: 3,
+  RSI_LENGTH: 14,
+  DIV_LOOKBACK: 10,
+  BB_LENGTH: 20,
+  BB_MULT: 2.0,
+  POST_COMP_WINDOW: 30
 });
 
 const state = {
   data: [], autoRefresh: true, timer: null, loading: false, lastUpdated: null,
-  currency: 'usd', alertSignals: [], notifiedBuckets: new Set(), chartCache: new Map(), historyUnavailable: new Map(),
-  audioCtx: null, consecutiveFailures: 0, alertScanning: false, detailCoinId: null, detailRequestToken: 0, deferredInstall: null, swRegistration: null
+  currency: 'usd', chartCache: new Map(), historyUnavailable: new Map(),
+  audioCtx: null, consecutiveFailures: 0, detailCoinId: null, detailRequestToken: 0,
+  deferredInstall: null, swRegistration: null,
+
+  techScanning: false, techLastScan: 0, techLastScanKey: '', techAnalyses: new Map(),
+  techSignals: [], techNotified: new Set(), binancePairs: null, binancePairsPromise: null
 };
 
 const $ = id => document.getElementById(id);
 const universeSel=$('universeSel'), volSel=$('volSel'), countSel=$('countSel'), currencySel=$('currencySel');
 const refreshBtn=$('refreshBtn'), refreshLabel=$('refreshLabel'), autoSwitch=$('autoSwitch'), statusLine=$('statusLine'), subLine=$('subLine');
 const gainersBody=$('gainersBody'), losersBody=$('losersBody'), gainCount=$('gainCount'), loseCount=$('loseCount'), tickerTrack=$('tickerTrack');
-const alertBody=$('alertBody'), alertScanStatus=$('alertScanStatus'), notifyBtn=$('notifyBtn'), installBtn=$('installBtn'), toastWrap=$('toastWrap');
+const alertBody=$('alertBody'), alertScanStatus=$('alertScanStatus'), scannerBtn=$('scannerBtn'), scannerProgress=$('scannerProgress'), notifyBtn=$('notifyBtn'), installBtn=$('installBtn'), toastWrap=$('toastWrap');
 const coinModal=$('coinModal'), detailDialog=$('detailDialog'), detailClose=$('detailClose'), detailBody=$('detailBody'), detailName=$('detailName'), detailSub=$('detailSub'), detailImage=$('detailImage'), detailAlertStatus=$('detailAlertStatus');
 
 function el(tag, className='', text=''){
@@ -407,16 +464,6 @@ function priceAtOrBefore(prices,target,maxGapMs=8*60*1000){
   if(!best || target-best[0]>maxGapMs) return null; return best;
 }
 
-function validateFourSegments(prices){
-  if(!prices.length) return null;
-  const end=prices[prices.length-1]; const endTs=end[0]; const sampled=[];
-  for(let mins=60;mins>=0;mins-=15){ const p=priceAtOrBefore(prices,endTs-mins*60*1000); if(!p) return null; sampled.push(p); }
-  const changes=[];
-  for(let i=0;i<4;i++) changes.push((sampled[i+1][1]/sampled[i][1]-1)*100);
-  const valid=changes.every(x=>x>CONFIG.ALERT_THRESHOLD); const total=(sampled[4][1]/sampled[0][1]-1)*100;
-  return {valid,changes,total,endTs,current:sampled[4][1],sampled};
-}
-
 function changeOverMinutes(prices,minutes){
   if(!prices.length) return null; const end=prices[prices.length-1]; const start=priceAtOrBefore(prices,end[0]-minutes*60*1000);
   return start ? (end[1]/start[1]-1)*100 : null;
@@ -441,7 +488,7 @@ function makeStat(label,value,cls=''){
 }
 function renderCoinDetailUnavailable(c,err){
   detailAlertStatus.className='detail-status';
-  detailAlertStatus.textContent='Histórico 15m indisponível';
+  detailAlertStatus.textContent='Scanner técnico 4H · 1D · 1W';
   const frag=document.createDocumentFragment(), stats=el('div','stat-grid');
   stats.append(
     makeStat('Preço',fmtPrice(c.current_price)),
@@ -459,56 +506,84 @@ function renderCoinDetailUnavailable(c,err){
   const box=el('div','detail-error');
   box.append(
     document.createTextNode(describeError(err)+'. '),
-    document.createTextNode('Os dados atuais continuam válidos, mas esta moeda fica excluída da validação 4 × 15 min até existir histórico suficiente.')
+    document.createTextNode('Os dados atuais continuam válidos. Esta indisponibilidade afeta apenas o gráfico intradiário CoinGecko; o scanner 4H/1D/1W usa candles Binance e é analisado separadamente.')
   );
   section.append(title,box); frag.append(section);
 
   const actions=el('div','detail-actions');
-  const note=el('div','detail-note','* A variação de 1h apresentada aqui vem do endpoint agregado de mercado; não substitui os quatro blocos de 15 minutos.');
+  const note=el('div','detail-note','* A variação de 1h apresentada aqui vem do endpoint agregado de mercado. O scanner técnico usa candles Binance fechados.');
   const link=el('a','external-link','Abrir na CoinGecko ↗');
   link.href='https://www.coingecko.com/en/coins/'+encodeURIComponent(c.id); link.target='_blank'; link.rel='noopener noreferrer';
   actions.append(note,link); frag.append(actions); detailBody.replaceChildren(frag);
 }
 
 function renderCoinDetail(c,prices){
-  const seg=validateFourSegments(prices), p15=changeOverMinutes(prices,15),p30=changeOverMinutes(prices,30),p45=changeOverMinutes(prices,45),p60=changeOverMinutes(prices,60);
-  detailAlertStatus.className='detail-status'+(seg?.valid?' active':''); detailAlertStatus.textContent=seg?.valid?'● ALERTA 4 × 15 MIN ATIVO':'Sem alerta 4 × 15 min';
+  const p15=changeOverMinutes(prices,15),p30=changeOverMinutes(prices,30),p45=changeOverMinutes(prices,45),p60=changeOverMinutes(prices,60);
+  detailAlertStatus.className='detail-status'; detailAlertStatus.textContent='Scanner técnico 4H · 1D · 1W';
   const frag=document.createDocumentFragment(), stats=el('div','stat-grid');
   stats.append(makeStat('Preço',fmtPrice(c.current_price)),makeStat('15 min',fmtPct(p15),pctClass(p15)),makeStat('30 min',fmtPct(p30),pctClass(p30)),makeStat('45 min',fmtPct(p45),pctClass(p45)),makeStat('1 hora',fmtPct(p60),pctClass(p60)),makeStat('24 horas',fmtPct(c.price_change_percentage_24h),pctClass(c.price_change_percentage_24h)),makeStat('Market cap',fmtCompact(c.market_cap)),makeStat('Volume 24h',fmtCompact(c.total_volume)),makeStat('Máximo 24h',fmtPrice(c.high_24h)),makeStat('Mínimo 24h',fmtPrice(c.low_24h))); frag.append(stats);
-  const segSection=el('section','detail-section'),segTitle=el('div','detail-section-title'); segTitle.append(document.createTextNode('Quatro períodos consecutivos de 15 minutos'),el('small','', 'critério: cada período > +2,00%')); segSection.append(segTitle);
-  const segGrid=el('div','segment-grid'); (seg?.changes||[null,null,null,null]).forEach((v,i)=>{const b=el('div','segment-box'+(Number(v)>CONFIG.ALERT_THRESHOLD?' ok':'')); b.append(el('div','seg-lbl','15m #'+(i+1)),el('div','seg-val',fmtPct(v))); segGrid.append(b)}); segSection.append(segGrid); frag.append(segSection);
   const chartSection=el('section','detail-section'), chartTitle=el('div','detail-section-title'); chartTitle.append(document.createTextNode('Evolução intradiária — últimas 24h'),el('small','',prices.length+' pontos históricos')); const wrap=el('div','chart-wrap'),canvas=el('canvas'); canvas.setAttribute('aria-label','Gráfico de preço das últimas 24 horas'); wrap.append(canvas); chartSection.append(chartTitle,wrap); frag.append(chartSection);
-  const actions=el('div','detail-actions'),note=el('div','detail-note','Histórico atualizado conforme disponibilidade da CoinGecko.'),link=el('a','external-link','Abrir na CoinGecko ↗'); link.href='https://www.coingecko.com/en/coins/'+encodeURIComponent(c.id); link.target='_blank'; link.rel='noopener noreferrer'; actions.append(note,link); frag.append(actions);
-  detailBody.replaceChildren(frag); requestAnimationFrame(()=>drawDetailChart(canvas,prices));
+  const actions=el('div','detail-actions'),note=el('div','detail-note','Gráfico intradiário: CoinGecko. Scanner técnico: Binance Spot USDT.'),link=el('a','external-link','Abrir na CoinGecko ↗'); link.href='https://www.coingecko.com/en/coins/'+encodeURIComponent(c.id); link.target='_blank'; link.rel='noopener noreferrer'; actions.append(note,link); frag.append(actions);
+  detailBody.replaceChildren(frag); appendTechnicalDetail(c); requestAnimationFrame(()=>drawDetailChart(canvas,prices));
 }
 async function openCoinDetail(c){
   if(!c?.id) return; const token=++state.detailRequestToken; state.detailCoinId=c.id;
   detailName.textContent=c.name||String(c.symbol||'').toUpperCase()||'Moeda'; detailSub.textContent=String(c.symbol||'').toUpperCase()+' · MC# '+(c.market_cap_rank||'—'); detailAlertStatus.className='detail-status'; detailAlertStatus.textContent='a analisar…';
   if(typeof c.image==='string'&&c.image.startsWith('https://')){detailImage.src=c.image;detailImage.hidden=false}else detailImage.hidden=true;
   detailBody.replaceChildren(el('div','detail-loading','A carregar histórico intradiário…')); coinModal.hidden=false; document.body.style.overflow='hidden'; detailClose.focus({preventScroll:true});
-  try{ const prices=await fetchOneDayChart(c.id); if(token!==state.detailRequestToken||coinModal.hidden) return; const live=state.data.find(x=>x.id===c.id)||c; renderCoinDetail(live,prices); }
+  try{ const prices=await fetchOneDayChart(c.id); if(token!==state.detailRequestToken||coinModal.hidden) return; const live=state.data.find(x=>x.id===c.id)||c; renderCoinDetail(live,prices); ensureCoinTechnical(live); }
   catch(err){
     if(token!==state.detailRequestToken||coinModal.hidden) return;
     const live=state.data.find(x=>x.id===c.id)||c;
-    renderCoinDetailUnavailable(live,err);
+    renderCoinDetailUnavailable(live,err); appendTechnicalDetail(live); ensureCoinTechnical(live);
   }
+}
+
+function tfOrder(tf){ return tf==='4H'?0:tf==='1D'?1:2; }
+function signalKey(s){ return `${s.id}:${s.timeframe}:${s.direction}:${s.closeTime}`; }
+function scanConfigKey(){ return `${universeSel.value}:${volSel.value}`; }
+
+function loadTechNotified(){
+  try{ const a=JSON.parse(localStorage.getItem(CONFIG.TECH_NOTIFIED_KEY)||'[]'); if(Array.isArray(a)) state.techNotified=new Set(a.slice(-600)); }catch(_){ }
+}
+function saveTechNotified(){
+  try{ localStorage.setItem(CONFIG.TECH_NOTIFIED_KEY,JSON.stringify([...state.techNotified].slice(-600))); }catch(_){ }
+}
+function saveTechCache(){
+  try{ localStorage.setItem(CONFIG.TECH_CACHE_KEY,JSON.stringify({ts:state.techLastScan,key:state.techLastScanKey,signals:state.techSignals.slice(0,100)})); }catch(_){ }
+}
+function loadTechCache(){
+  try{
+    const c=JSON.parse(localStorage.getItem(CONFIG.TECH_CACHE_KEY)||'null'); if(!c||!Array.isArray(c.signals)) return;
+    state.techLastScan=Number(c.ts)||0; state.techLastScanKey=String(c.key||''); state.techSignals=c.signals; renderAlerts();
+    if(state.techLastScan) alertScanStatus.textContent=`último scanner: ${fmtAge(state.techLastScan)} atrás`;
+  }catch(_){ }
 }
 
 function renderAlerts(){
   alertBody.replaceChildren();
-  if(!state.alertSignals.length){ alertBody.append(el('div','alert-empty','Ainda não existem sinais confirmados nesta sessão.')); return; }
-  const labels=el('div','signal-labels'); ['Moeda','15m #1','15m #2','15m #3','15m #4','Total 1h','Hora'].forEach(t=>labels.append(el('span','',t))); alertBody.append(labels);
-  state.alertSignals.slice(0,20).forEach(s=>{
-    const row=el('div','signal'); const coin=el('div','coin-name',s.name); coin.append(el('small','',String(s.symbol).toUpperCase()+' · MC# '+(s.marketCapRank||'—')));
-    row.append(coin); s.changes.forEach(v=>row.append(el('div','seg',fmtPct(v)))); row.append(el('div','total',fmtPct(s.total)),el('div','time',new Date(s.endTs).toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'})));
-    row.classList.add('clickable'); row.tabIndex=0; row.setAttribute('role','button'); row.setAttribute('aria-label','Abrir detalhes de '+s.name);
-    const open=()=>{ const c=state.data.find(x=>x.id===s.id)||{id:s.id,name:s.name,symbol:s.symbol,market_cap_rank:s.marketCapRank,current_price:s.current}; openCoinDetail(c); };
-    row.addEventListener('click',open); row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}}); alertBody.append(row);
+  const signals=[...state.techSignals].sort((a,b)=>tfOrder(a.timeframe)-tfOrder(b.timeframe)||b.closeTime-a.closeTime||b.score-a.score);
+  if(!signals.length){ alertBody.append(el('div','alert-empty','Sem sinais BUY/SELL confirmados na última vela fechada de 4H, 1D ou 1W.')); return; }
+  const labels=el('div','tech-signal-labels'); ['Moeda','TF','Sinal','Score','Confluências','Fecho'].forEach(t=>labels.append(el('span','',t))); alertBody.append(labels);
+  signals.slice(0,60).forEach(s=>{
+    const row=el('div','tech-signal'); row.tabIndex=0; row.setAttribute('role','button');
+    const coin=el('div','coin-name',s.name||s.symbol); coin.append(el('small','',`${String(s.symbol||'').toUpperCase()} · ${s.pair||'—'} · MC# ${s.marketCapRank||'—'}`));
+    const tf=el('div','tf-pill',s.timeframe), dir=el('div','dir-pill '+String(s.direction).toLowerCase(),s.direction), score=el('div','tech-score',String(s.score));
+    const criteria=el('div','tech-criteria',(s.criteria||[]).join(' · ')||'score atingido');
+    const close=el('div','tech-close',formatSignalClose(s));
+    row.append(coin,tf,dir,score,criteria,close);
+    const open=()=>{const c=state.data.find(x=>x.id===s.id)||{id:s.id,name:s.name,symbol:s.symbol,market_cap_rank:s.marketCapRank,current_price:s.current};openCoinDetail(c)};
+    row.addEventListener('click',open); row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
+    alertBody.append(row);
   });
 }
-
-function toast(message){
-  const t=el('div','toast'); t.append(el('strong','', 'ALERTA 15m'),document.createTextNode(' · '+message)); toastWrap.append(t); setTimeout(()=>t.remove(),9000);
+function formatSignalClose(s){
+  const d=new Date(Number(s.closeTime));
+  if(s.timeframe==='4H') return d.toLocaleString('pt-PT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  return d.toLocaleDateString('pt-PT',{day:'2-digit',month:'2-digit',year:'2-digit'});
+}
+function toast(message,title='SCANNER'){
+  const t=el('div','toast'); t.append(el('strong','',title),document.createTextNode(' · '+message)); toastWrap.append(t); setTimeout(()=>t.remove(),9000);
 }
 function beep(){
   try{
@@ -517,46 +592,211 @@ function beep(){
   }catch(_){ }
 }
 function notifySignal(signal){
-  const msg=`${signal.name}: ${signal.changes.map(v=>fmtPct(v)).join(' · ')} | 1h ${fmtPct(signal.total)}`; toast(msg); beep();
-  // A notificação Push principal é enviada pelo backend. Enquanto o painel está aberto,
-  // esta chamada dá feedback imediato e usa o Service Worker quando disponível.
+  const body=`${signal.name} (${String(signal.symbol).toUpperCase()}) · score ${signal.score} · ${(signal.criteria||[]).slice(0,4).join(' · ')}`;
+  toast(body,`${signal.direction} ${signal.timeframe}`); beep();
   if('Notification' in window && Notification.permission==='granted' && state.swRegistration){
-    const bucket=Math.floor(signal.endTs/(15*60*1000));
-    state.swRegistration.showNotification('Momentum 4 × 15 min confirmado',{
-      body:msg, tag:`momentum-${signal.id}-${bucket}`, icon:'/icon-192.png', badge:'/icon-192.png',
+    state.swRegistration.showNotification(`${signal.direction} ${signal.timeframe} · ${String(signal.symbol).toUpperCase()}`,{
+      body, tag:`pine-${signalKey(signal)}`, icon:'/icon-192.png', badge:'/icon-192.png',
       data:{url:'/?coin='+encodeURIComponent(signal.id),coinId:signal.id}, renotify:false
     }).catch(()=>{});
   }
 }
 
-async function scanAlerts(){
-  if(state.alertScanning) return;
-  state.alertScanning=true;
-  try{
-    const eligible=filteredData();
-    const candidates=eligible.filter(c=>Number(c.price_change_percentage_1h_in_currency)>=CONFIG.ALERT_PREFILTER_1H).sort((a,b)=>b.price_change_percentage_1h_in_currency-a.price_change_percentage_1h_in_currency);
-    if(!candidates.length){ alertScanStatus.textContent='0 candidatas no pré-filtro 1h'; return; }
-    alertScanStatus.textContent=`a validar ${candidates.length} candidata${candidates.length===1?'':'s'}…`;
-    let confirmed=0, failed=0, unavailable=0;
-    for(let i=0;i<candidates.length;i++){
-      const c=candidates[i];
-      try{
-        const prices=await fetchOneDayChart(c.id),check=validateFourSegments(prices);
-        if(check?.valid){
-          confirmed++; const bucket=Math.floor(check.endTs/(15*60*1000)); const key=c.id+':'+bucket;
-          const signal={id:c.id,name:c.name,symbol:c.symbol,marketCapRank:c.market_cap_rank,changes:check.changes,total:check.total,endTs:check.endTs,current:check.current};
-          const existing=state.alertSignals.findIndex(s=>s.id===signal.id&&Math.floor(s.endTs/(15*60*1000))===bucket);
-          if(existing>=0) state.alertSignals[existing]=signal; else state.alertSignals.unshift(signal);
-          if(!state.notifiedBuckets.has(key)){ state.notifiedBuckets.add(key); notifySignal(signal); }
-        }
-      }catch(err){ if(err?.code==='HISTORY_UNAVAILABLE') unavailable++; else failed++; }
-      if(i<candidates.length-1) await sleep(CONFIG.CHART_DELAY_MS);
-    }
-    state.alertSignals.sort((a,b)=>b.endTs-a.endTs); renderAlerts();
-    alertScanStatus.textContent=`${confirmed} sinal${confirmed===1?'':'is'} · ${candidates.length} validada${candidates.length===1?'':'s'}${unavailable?' · '+unavailable+' sem histórico':''}${failed?' · '+failed+' falha(s)':''}`;
-  }finally{
-    state.alertScanning=false;
+function isFiniteNum(v){ return Number.isFinite(Number(v)); }
+function smaSeries(values,len){
+  const out=new Array(values.length).fill(null);
+  for(let i=len-1;i<values.length;i++){ const w=values.slice(i-len+1,i+1); if(w.every(isFiniteNum)) out[i]=w.reduce((a,b)=>a+Number(b),0)/len; }
+  return out;
+}
+function emaSeries(values,len){
+  const out=new Array(values.length).fill(null), alpha=2/(len+1); let prev=null;
+  for(let i=0;i<values.length;i++){ const v=Number(values[i]); if(!Number.isFinite(v)) continue; prev=prev==null?v:alpha*v+(1-alpha)*prev; out[i]=prev; }
+  return out;
+}
+function rmaSeries(values,len){
+  const out=new Array(values.length).fill(null); let prev=null, seed=[];
+  for(let i=0;i<values.length;i++){
+    const v=Number(values[i]); if(!Number.isFinite(v)) continue;
+    if(prev==null){ seed.push(v); if(seed.length===len){ prev=seed.reduce((a,b)=>a+b,0)/len; out[i]=prev; } }
+    else{ prev=(v+(len-1)*prev)/len; out[i]=prev; }
   }
+  return out;
+}
+function rollingSumSeries(values,len){
+  const out=new Array(values.length).fill(null);
+  for(let i=len-1;i<values.length;i++){ const w=values.slice(i-len+1,i+1); if(w.every(isFiniteNum)) out[i]=w.reduce((a,b)=>a+Number(b),0); }
+  return out;
+}
+function stdevSeries(values,len){
+  const out=new Array(values.length).fill(null);
+  for(let i=len-1;i<values.length;i++){ const w=values.slice(i-len+1,i+1).map(Number); if(!w.every(Number.isFinite)) continue; const m=w.reduce((a,b)=>a+b,0)/len; out[i]=Math.sqrt(w.reduce((a,b)=>a+(b-m)*(b-m),0)/len); }
+  return out;
+}
+function prevWindowMin(values,i,len){ if(i<len) return null; const w=values.slice(i-len,i).map(Number); return w.every(Number.isFinite)?Math.min(...w):null; }
+function prevWindowMax(values,i,len){ if(i<len) return null; const w=values.slice(i-len,i).map(Number); return w.every(Number.isFinite)?Math.max(...w):null; }
+function crossover(a,b,i){ return i>0&&isFiniteNum(a[i])&&isFiniteNum(b[i])&&isFiniteNum(a[i-1])&&isFiniteNum(b[i-1])&&a[i]>b[i]&&a[i-1]<=b[i-1]; }
+function crossunder(a,b,i){ return i>0&&isFiniteNum(a[i])&&isFiniteNum(b[i])&&isFiniteNum(a[i-1])&&isFiniteNum(b[i-1])&&a[i]<b[i]&&a[i-1]>=b[i-1]; }
+
+function normalizeKlines(rows){
+  const now=Date.now();
+  return (Array.isArray(rows)?rows:[]).filter(r=>Array.isArray(r)&&r.length>=7).map(r=>({
+    openTime:Number(r[0]),open:Number(r[1]),high:Number(r[2]),low:Number(r[3]),close:Number(r[4]),volume:Number(r[5]),closeTime:Number(r[6])
+  })).filter(b=>[b.openTime,b.open,b.high,b.low,b.close,b.volume,b.closeTime].every(Number.isFinite)&&b.closeTime<now-1000).sort((a,b)=>a.openTime-b.openTime);
+}
+function buildPineAnalysis(bars,timeframe){
+  if(!Array.isArray(bars)||bars.length<90) return {timeframe,available:false,reason:'histórico insuficiente'};
+  const n=bars.length, O=bars.map(b=>b.open),H=bars.map(b=>b.high),L=bars.map(b=>b.low),C=bars.map(b=>b.close),V=bars.map(b=>b.volume);
+  const emaFast=emaSeries(C,CONFIG.EMA_FAST), emaSlow=emaSeries(C,CONFIG.EMA_SLOW);
+  const tr=C.map((_,i)=>i===0?H[i]-L[i]:Math.max(H[i]-L[i],Math.abs(H[i]-C[i-1]),Math.abs(L[i]-C[i-1])));
+  const atr=rmaSeries(tr,CONFIG.ATR_LEN), atrComp=rmaSeries(tr,CONFIG.COMPRESSION_ATR_LEN), atrAvg=smaSeries(atrComp,CONFIG.COMPRESSION_ATR_AVG);
+  const cvdDelta=C.map((c,i)=>H[i]-L[i]>0?((2*c-H[i]-L[i])/(H[i]-L[i]))*V[i]:0), cvdSum=rollingSumSeries(cvdDelta,CONFIG.CVD_LOOKBACK), smoothCVD=emaSeries(cvdSum,CONFIG.CVD_SMOOTH);
+  const cvdSlope=Math.max(1,Math.round(CONFIG.CVD_SMOOTH/2));
+  const stochRaw=new Array(n).fill(null);
+  for(let i=CONFIG.STOCH_K-1;i<n;i++){const hh=Math.max(...H.slice(i-CONFIG.STOCH_K+1,i+1)),ll=Math.min(...L.slice(i-CONFIG.STOCH_K+1,i+1));stochRaw[i]=hh===ll?0:100*(C[i]-ll)/(hh-ll)}
+  const slowK=smaSeries(stochRaw,CONFIG.STOCH_SMOOTH), slowD=smaSeries(slowK,CONFIG.STOCH_D);
+  const gains=C.map((c,i)=>i===0?null:Math.max(c-C[i-1],0)), losses=C.map((c,i)=>i===0?null:Math.max(C[i-1]-c,0));
+  const avgGain=rmaSeries(gains,CONFIG.RSI_LENGTH), avgLoss=rmaSeries(losses,CONFIG.RSI_LENGTH), rsi=C.map((_,i)=>isFiniteNum(avgGain[i])&&isFiniteNum(avgLoss[i])?(avgLoss[i]===0?100:100-100/(1+avgGain[i]/avgLoss[i])):null);
+  const bbMid=smaSeries(C,CONFIG.BB_LENGTH), bbSd=stdevSeries(C,CONFIG.BB_LENGTH), volAvg=smaSeries(V,20);
+  let lastCompression=-999,lastSignal=-999,lastDir=0, latest=null;
+  for(let i=0;i<n;i++){
+    const compressed=isFiniteNum(emaFast[i])&&isFiniteNum(emaSlow[i])&&C[i]!==0&&isFiniteNum(atrComp[i])&&isFiniteNum(atrAvg[i])&&Math.abs(emaFast[i]-emaSlow[i])/C[i]<CONFIG.COMPRESSION_THRESHOLD&&atrComp[i]<atrAvg[i];
+    if(compressed) lastCompression=i;
+    const postCompOk=i-lastCompression<=CONFIG.POST_COMP_WINDOW&&!compressed;
+    const cvdRising=i>=cvdSlope&&isFiniteNum(smoothCVD[i])&&isFiniteNum(smoothCVD[i-cvdSlope])&&smoothCVD[i]>smoothCVD[i-cvdSlope];
+    const cvdFalling=i>=cvdSlope&&isFiniteNum(smoothCVD[i])&&isFiniteNum(smoothCVD[i-cvdSlope])&&smoothCVD[i]<smoothCVD[i-cvdSlope];
+    const stochBull=isFiniteNum(slowK[i])&&slowK[i]<CONFIG.STOCH_OVERSOLD, stochBear=isFiniteNum(slowK[i])&&slowK[i]>CONFIG.STOCH_OVERBOUGHT;
+    const stochBullCross=crossover(slowK,slowD,i)&&slowK[i]<CONFIG.STOCH_OVERSOLD, stochBearCross=crossunder(slowK,slowD,i)&&slowK[i]>CONFIG.STOCH_OVERBOUGHT;
+    const emaDeviation=isFiniteNum(atr[i])&&atr[i]!==0&&isFiniteNum(emaSlow[i])?(C[i]-emaSlow[i])/atr[i]:null;
+    const bullExtended=isFiniteNum(emaDeviation)&&emaDeviation<-CONFIG.EXT_THRESHOLD, bearExtended=isFiniteNum(emaDeviation)&&emaDeviation>CONFIG.EXT_THRESHOLD;
+    const bullExtPts=bullExtended?(emaDeviation<-(CONFIG.EXT_THRESHOLD+2)?3:emaDeviation<-(CONFIG.EXT_THRESHOLD+1)?2:1):0;
+    const bearExtPts=bearExtended?(emaDeviation>(CONFIG.EXT_THRESHOLD+2)?3:emaDeviation>(CONFIG.EXT_THRESHOLD+1)?2:1):0;
+    const roc=i>=CONFIG.ROC_LENGTH?(C[i]-C[i-CONFIG.ROC_LENGTH])/C[i-CONFIG.ROC_LENGTH]*100:null;
+    const rocPrev=i-1>=CONFIG.ROC_LENGTH?(C[i-1]-C[i-1-CONFIG.ROC_LENGTH])/C[i-1-CONFIG.ROC_LENGTH]*100:null;
+    const momentumBull=isFiniteNum(rocPrev)&&isFiniteNum(roc)&&rocPrev<-3&&roc>rocPrev&&C[i]>O[i];
+    const momentumBear=isFiniteNum(rocPrev)&&isFiniteNum(roc)&&rocPrev>3&&roc<rocPrev&&C[i]<O[i];
+    const prevLow=prevWindowMin(L,i,CONFIG.DIV_LOOKBACK),prevHigh=prevWindowMax(H,i,CONFIG.DIV_LOOKBACK),prevRsiLow=prevWindowMin(rsi,i,CONFIG.DIV_LOOKBACK),prevRsiHigh=prevWindowMax(rsi,i,CONFIG.DIV_LOOKBACK);
+    const bullDiv=isFiniteNum(prevLow)&&isFiniteNum(prevRsiLow)&&isFiniteNum(rsi[i])&&L[i]<prevLow&&rsi[i]>prevRsiLow&&rsi[i]<50;
+    const bearDiv=isFiniteNum(prevHigh)&&isFiniteNum(prevRsiHigh)&&isFiniteNum(rsi[i])&&H[i]>prevHigh&&rsi[i]<prevRsiHigh&&rsi[i]>50;
+    const bbUpper=isFiniteNum(bbMid[i])&&isFiniteNum(bbSd[i])?bbMid[i]+CONFIG.BB_MULT*bbSd[i]:null, bbLower=isFiniteNum(bbMid[i])&&isFiniteNum(bbSd[i])?bbMid[i]-CONFIG.BB_MULT*bbSd[i]:null;
+    const touchLower=isFiniteNum(bbLower)&&L[i]<=bbLower, touchUpper=isFiniteNum(bbUpper)&&H[i]>=bbUpper;
+    const range=H[i]-L[i],uWick=H[i]-Math.max(O[i],C[i]),lWick=Math.min(O[i],C[i])-L[i];
+    const bullPin=range>0&&lWick>=.55*range&&Math.abs(C[i]-O[i])<=.35*range, bearPin=range>0&&uWick>=.55*range&&Math.abs(C[i]-O[i])<=.35*range;
+    const bullEngulf=i>0&&C[i]>O[i]&&C[i]>O[i-1]&&O[i]<=C[i-1]&&O[i-1]>C[i-1];
+    const bearEngulf=i>0&&C[i]<O[i]&&C[i]<O[i-1]&&O[i]>=C[i-1]&&O[i-1]<C[i-1];
+    const volSurge=isFiniteNum(volAvg[i])&&V[i]>1.5*volAvg[i], volClimaxBull=isFiniteNum(volAvg[i])&&V[i]>3*volAvg[i]&&C[i]>O[i], volClimaxBear=isFiniteNum(volAvg[i])&&V[i]>3*volAvg[i]&&C[i]<O[i];
+    const buyParts=[],sellParts=[]; let scoreBuy=0,scoreSell=0;
+    const add=(cond,pts,label,arr,side)=>{if(cond){if(side==='b')scoreBuy+=pts;else scoreSell+=pts;arr.push(pts>1?`${label}(+${pts})`:label)}};
+    add(isFiniteNum(emaFast[i])&&isFiniteNum(emaSlow[i])&&emaFast[i]>emaSlow[i],1,'EMA',buyParts,'b'); add(isFiniteNum(emaFast[i])&&isFiniteNum(emaSlow[i])&&emaFast[i]<emaSlow[i],1,'EMA',sellParts,'s');
+    add(stochBull,1,'Stoch zona',buyParts,'b'); add(stochBear,1,'Stoch zona',sellParts,'s');
+    add(stochBullCross,1,'Stoch K/D',buyParts,'b'); add(stochBearCross,1,'Stoch K/D',sellParts,'s');
+    add(cvdRising,1,'CVD',buyParts,'b'); add(cvdFalling,1,'CVD',sellParts,'s');
+    // scorePostComp=false no Pine original: calculado mas não pontua por defeito.
+    add(volSurge&&C[i]>O[i],1,'Volume surge',buyParts,'b'); add(volSurge&&C[i]<O[i],1,'Volume surge',sellParts,'s');
+    add(bullExtended,bullExtPts,'Ext EMA',buyParts,'b'); add(bearExtended,bearExtPts,'Ext EMA',sellParts,'s');
+    add(momentumBull,1,'Momentum exaustão',buyParts,'b'); add(momentumBear,1,'Momentum exaustão',sellParts,'s');
+    add(bullDiv,1,'RSI div',buyParts,'b'); add(bearDiv,1,'RSI div',sellParts,'s');
+    add(touchLower,1,'Bollinger',buyParts,'b'); add(touchUpper,1,'Bollinger',sellParts,'s');
+    add(bullPin||bullEngulf,1,'Pin/Engulf',buyParts,'b'); add(bearPin||bearEngulf,1,'Pin/Engulf',sellParts,'s');
+    add(volClimaxBull,1,'Volume climax',buyParts,'b'); add(volClimaxBear,1,'Volume climax',sellParts,'s');
+    const cooldownOk=i-lastSignal>=CONFIG.TECH_COOLDOWN, bodyBuy=C[i]>O[i], bodySell=C[i]<O[i];
+    const buySignal=scoreBuy>=CONFIG.TECH_MIN_SCORE&&cooldownOk&&!compressed&&bodyBuy&&lastDir!==1;
+    const sellSignal=scoreSell>=CONFIG.TECH_MIN_SCORE&&cooldownOk&&!compressed&&bodySell&&lastDir!==-1;
+    if(buySignal){lastSignal=i;lastDir=1;} if(sellSignal){lastSignal=i;lastDir=-1;}
+    if(i===n-1){
+      latest={timeframe,available:true,openTime:bars[i].openTime,closeTime:bars[i].closeTime,close:C[i],scoreBuy,scoreSell,buySignal,sellSignal,direction:buySignal?'BUY':sellSignal?'SELL':null,score:buySignal?scoreBuy:sellSignal?scoreSell:Math.max(scoreBuy,scoreSell),criteria:buySignal?buyParts:sellSignal?sellParts:(scoreBuy>=scoreSell?buyParts:sellParts),buyCriteria:buyParts,sellCriteria:sellParts,cooldownOk,compressed,postCompOk};
+    }
+  }
+  return latest||{timeframe,available:false,reason:'sem cálculo'};
+}
+
+async function fetchBinanceJSON(path){
+  let last;
+  for(const base of CONFIG.BINANCE_BASES){
+    try{return await fetchJSON(base+path,{timeout:CONFIG.FETCH_TIMEOUT_MS,retries:1});}
+    catch(err){last=err;}
+  }
+  throw last||new Error('BINANCE_UNAVAILABLE');
+}
+async function ensureBinancePairs(){
+  if(state.binancePairs) return state.binancePairs;
+  if(state.binancePairsPromise) return state.binancePairsPromise;
+  state.binancePairsPromise=(async()=>{
+    const data=await fetchBinanceJSON('/api/v3/exchangeInfo'), map=new Map();
+    for(const s of (data?.symbols||[])){
+      if(s?.status!=='TRADING'||String(s.quoteAsset).toUpperCase()!=='USDT') continue;
+      if(s.isSpotTradingAllowed===false) continue;
+      const base=String(s.baseAsset||'').toUpperCase(); if(!base) continue;
+      if(!map.has(base)||String(s.symbol)===base+'USDT') map.set(base,String(s.symbol));
+    }
+    state.binancePairs=map; return map;
+  })();
+  try{return await state.binancePairsPromise;}finally{state.binancePairsPromise=null;}
+}
+async function fetchKlines(pair,interval,limit){
+  const data=await fetchBinanceJSON(`/api/v3/klines?symbol=${encodeURIComponent(pair)}&interval=${encodeURIComponent(interval)}&limit=${limit}`);
+  return normalizeKlines(data);
+}
+async function analyzeCoinTechnical(c,{force=false}={}){
+  const cached=state.techAnalyses.get(c.id); if(!force&&cached&&Date.now()-cached.fetchedAt<CONFIG.TECH_ANALYSIS_CACHE_MS) return cached;
+  let pair=null;
+  try{
+    const pairs=await ensureBinancePairs(); pair=pairs.get(String(c.symbol||'').toUpperCase())||null;
+    if(!pair){const out={available:false,fetchedAt:Date.now(),reason:'sem par Binance Spot USDT'};state.techAnalyses.set(c.id,out);return out;}
+    const [h4,d1,w1]=await Promise.all([fetchKlines(pair,'4h',CONFIG.TECH_4H_LIMIT),fetchKlines(pair,'1d',CONFIG.TECH_1D_LIMIT),fetchKlines(pair,'1w',CONFIG.TECH_1W_LIMIT)]);
+    if(h4.length<90||d1.length<90||w1.length<90){const out={available:false,fetchedAt:Date.now(),pair,reason:'histórico Binance insuficiente'};state.techAnalyses.set(c.id,out);return out;}
+    // Proteção simples contra colisões de ticker CoinGecko/Binance quando a app está em USD.
+    if(state.currency==='usd'&&Number(c.current_price)>0){const ratio=h4[h4.length-1].close/Number(c.current_price);if(!Number.isFinite(ratio)||ratio<0.60||ratio>1.40){const out={available:false,fetchedAt:Date.now(),pair,reason:'ticker CoinGecko/Binance não corresponde'};state.techAnalyses.set(c.id,out);return out;}}
+    const timeframes={'4H':buildPineAnalysis(h4,'4H'),'1D':buildPineAnalysis(d1,'1D'),'1W':buildPineAnalysis(w1,'1W')};
+    const out={available:true,fetchedAt:Date.now(),pair,timeframes}; state.techAnalyses.set(c.id,out); return out;
+  }catch(err){const out={available:false,fetchedAt:Date.now(),pair,reason:err?.status===429?'limite temporário Binance':(err?.message||'falha Binance')};state.techAnalyses.set(c.id,out);return out;}
+}
+function signalFromAnalysis(c,a,tf){
+  const r=a?.timeframes?.[tf]; if(!r?.direction) return null;
+  return {id:c.id,name:c.name,symbol:c.symbol,marketCapRank:c.market_cap_rank,current:c.current_price,pair:a.pair,timeframe:tf,direction:r.direction,score:r.score,scoreBuy:r.scoreBuy,scoreSell:r.scoreSell,criteria:r.criteria,closeTime:r.closeTime,close:r.close};
+}
+async function mapLimit(items,limit,worker){
+  let next=0,done=0; const results=[];
+  const runners=Array.from({length:Math.min(limit,items.length)},async()=>{while(true){const i=next++;if(i>=items.length)break;results[i]=await worker(items[i],i);done++;if(scannerProgress)scannerProgress.style.width=(done/items.length*100).toFixed(1)+'%';if(done%5===0||done===items.length)alertScanStatus.textContent=`a analisar ${done}/${items.length}…`;}});
+  await Promise.all(runners); return results;
+}
+async function scanAlerts({force=false}={}){
+  if(state.techScanning) return;
+  const key=scanConfigKey();
+  if(!force&&state.techLastScan&&state.techLastScanKey===key&&Date.now()-state.techLastScan<CONFIG.TECH_SCAN_MIN_MS){renderAlerts();alertScanStatus.textContent=`scanner em cache · ${fmtAge(state.techLastScan)} atrás`;return;}
+  state.techScanning=true; scannerBtn.disabled=true; scannerBtn.textContent='A analisar…'; scannerProgress.style.width='0%';
+  try{
+    const eligible=filteredData(); alertScanStatus.textContent='a carregar pares Binance…';
+    const pairs=await ensureBinancePairs(); const candidates=eligible.filter(c=>pairs.has(String(c.symbol||'').toUpperCase())); const noPair=eligible.length-candidates.length;
+    if(!candidates.length){state.techSignals=[];renderAlerts();alertScanStatus.textContent=`0 moedas com par Binance USDT · ${noPair} sem par`;return;}
+    let failures=0,unavailable=0; const signals=[];
+    await mapLimit(candidates,CONFIG.TECH_CONCURRENCY,async c=>{
+      const a=await analyzeCoinTechnical(c,{force}); if(!a.available){unavailable++;return;}
+      for(const tf of ['4H','1D','1W']){const s=signalFromAnalysis(c,a,tf);if(s){signals.push(s);const k=signalKey(s);if(!state.techNotified.has(k)){state.techNotified.add(k);saveTechNotified();notifySignal(s);}}}
+      await sleep(50);
+    });
+    state.techSignals=signals; state.techLastScan=Date.now(); state.techLastScanKey=key; renderAlerts(); saveTechCache();
+    alertScanStatus.textContent=`${signals.length} sinal${signals.length===1?'':'is'} · ${candidates.length} analisada${candidates.length===1?'':'s'} · ${noPair} sem par${unavailable?' · '+unavailable+' indisponíveis':''}${failures?' · '+failures+' falhas':''}`;
+  }catch(err){alertScanStatus.textContent='falha no scanner: '+(err?.message||'erro');toast('Falha ao consultar candles Binance.','SCANNER');}
+  finally{state.techScanning=false;scannerBtn.disabled=false;scannerBtn.textContent='Analisar sinais';scannerProgress.style.width='0%';}
+}
+
+function buildTechnicalDetailSection(c){
+  const sec=el('section','detail-section'); sec.id='techDetailSection'; const title=el('div','detail-section-title'); title.append(document.createTextNode('Scanner Pine — 4H · Diário · Semanal'),el('small','',`score ≥ ${CONFIG.TECH_MIN_SCORE} · cooldown ${CONFIG.TECH_COOLDOWN}`)); sec.append(title);
+  const a=state.techAnalyses.get(c.id);
+  if(!a){sec.append(el('div','detail-loading','A carregar candles Binance e a calcular o scanner…'));return sec;}
+  if(!a.available){sec.append(el('div','detail-error','Scanner indisponível: '+a.reason+'.'));return sec;}
+  const grid=el('div','tech-detail-grid');
+  for(const tf of ['4H','1D','1W']){
+    const r=a.timeframes?.[tf],card=el('div','tech-tf-card'),head=el('div','tech-tf-head'),name=el('div','tech-tf-name',tf),stateEl=el('div','tech-state'+(r?.direction?' '+r.direction.toLowerCase():''),r?.direction||'SEM SINAL');head.append(name,stateEl);card.append(head);
+    if(r){const scores=el('div','tech-scores');scores.append(el('span','buy','BUY '+r.scoreBuy),el('span','sell','SELL '+r.scoreSell));card.append(scores);const reasons=r.direction?r.criteria:(r.scoreBuy>=r.scoreSell?r.buyCriteria:r.sellCriteria);card.append(el('div','tech-reasons',(reasons||[]).join(' · ')||'sem confluências suficientes'));card.append(el('div','tech-source','vela fechada: '+new Date(r.closeTime).toLocaleString('pt-PT')));}
+    grid.append(card);
+  }
+  sec.append(grid,el('div','tech-source','Fonte técnica: '+a.pair+' · Binance Spot USDT.')); return sec;
+}
+function appendTechnicalDetail(c){const old=detailBody.querySelector('#techDetailSection');if(old)old.remove();detailBody.append(buildTechnicalDetailSection(c));}
+async function ensureCoinTechnical(c){
+  const token=state.detailRequestToken,id=c.id; appendTechnicalDetail(c);
+  const a=await analyzeCoinTechnical(c); if(token!==state.detailRequestToken||coinModal.hidden||state.detailCoinId!==id)return a; appendTechnicalDetail(c); return a;
 }
 
 function scheduleNext(){
@@ -571,8 +811,7 @@ async function refresh({auto=false}={}){
   try{
     state.data=await fetchMarket(); state.lastUpdated=Date.now(); state.consecutiveFailures=0; saveMarketCache(); render();
     setStatus('atualizado às '+new Date(state.lastUpdated).toLocaleTimeString('pt-PT'),'ok');
-    await scanAlerts();
-    loadServerAlerts();
+    scanAlerts().catch(()=>{});
   }catch(err){
     state.consecutiveFailures++;
     if(state.data.length===0){
@@ -585,77 +824,26 @@ async function refresh({auto=false}={}){
   }
 }
 
-async function getPushSubscription(){
-  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
-  const reg=state.swRegistration || await navigator.serviceWorker.ready;
-  state.swRegistration=reg;
-  return await reg.pushManager.getSubscription();
-}
-function urlBase64ToUint8Array(base64String){
-  const padding='='.repeat((4-base64String.length%4)%4);
-  const base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');
-  const raw=atob(base64); const out=new Uint8Array(raw.length);
-  for(let i=0;i<raw.length;i++) out[i]=raw.charCodeAt(i);
-  return out;
-}
 async function requestNotifications(){
   beep();
-  if(!window.isSecureContext){ toast('As notificações Push exigem HTTPS.'); notifyBtn.textContent='HTTPS necessário'; return; }
-  if(!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)){
-    notifyBtn.textContent='Push indisponível neste browser'; return;
-  }
+  if(!window.isSecureContext){toast('As notificações exigem HTTPS.','NOTIFICAÇÕES');return;}
+  if(!('Notification' in window)){notifyBtn.textContent='Notificações indisponíveis';return;}
   try{
     const permission=await Notification.requestPermission();
-    if(permission!=='granted'){
-      notifyBtn.textContent=permission==='denied'?'Notificações bloqueadas':'Ativar notificações Push'; return;
-    }
-    const reg=state.swRegistration || await navigator.serviceWorker.ready; state.swRegistration=reg;
-    let sub=await reg.pushManager.getSubscription();
-    if(!sub){
-      const keyRes=await fetch('/api/vapid-public-key',{headers:{Accept:'application/json'}});
-      if(!keyRes.ok) throw new Error('Servidor Push indisponível');
-      const {publicKey}=await keyRes.json();
-      sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(publicKey)});
-    }
-    const res=await fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subscription:sub,userAgent:navigator.userAgent})});
-    if(!res.ok) throw new Error('Não foi possível registar a subscrição Push');
-    notifyBtn.textContent='Notificações Push ativas'; notifyBtn.disabled=true;
-    toast('Notificações Push ativas. O servidor enviará os alertas mesmo com o painel fechado.');
-  }catch(err){
-    notifyBtn.textContent='Tentar ativar Push'; toast(err?.message||'Falha ao ativar notificações Push.');
-  }
-}
-async function loadServerAlerts(){
-  try{
-    const res=await fetch('/api/alerts',{headers:{Accept:'application/json'}}); if(!res.ok) return;
-    const payload=await res.json(); if(!Array.isArray(payload?.alerts)) return;
-    for(const a of payload.alerts){
-      if(!a?.id||!Array.isArray(a.changes)) continue;
-      const exists=state.alertSignals.some(s=>s.id===a.id&&Math.floor(s.endTs/(15*60*1000))===Math.floor(Number(a.endTs)/(15*60*1000)));
-      if(!exists) state.alertSignals.push({...a,endTs:Number(a.endTs)});
-    }
-    state.alertSignals.sort((a,b)=>b.endTs-a.endTs); state.alertSignals=state.alertSignals.slice(0,50); renderAlerts();
-  }catch(_){ }
+    if(permission==='granted'){notifyBtn.textContent='Notificações ativas';notifyBtn.disabled=true;toast('Ativas para sinais detetados enquanto a aplicação estiver a executar.','NOTIFICAÇÕES');}
+    else notifyBtn.textContent=permission==='denied'?'Notificações bloqueadas':'Ativar notificações';
+  }catch(_){notifyBtn.textContent='Tentar ativar notificações';}
 }
 async function setupPWA(){
   if('serviceWorker' in navigator){
-    try{
-      state.swRegistration=await navigator.serviceWorker.register('/service-worker.js',{scope:'/'});
-      await navigator.serviceWorker.ready;
-      const sub=await getPushSubscription();
-      if(sub && Notification.permission==='granted'){
-        notifyBtn.textContent='Notificações Push ativas'; notifyBtn.disabled=true;
-        // Renovar silenciosamente o registo no backend após atualizações/redeploys.
-        fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subscription:sub,userAgent:navigator.userAgent})}).catch(()=>{});
-      }
-    }catch(_){ }
+    try{state.swRegistration=await navigator.serviceWorker.register('/service-worker.js',{scope:'/'});await navigator.serviceWorker.ready;}catch(_){ }
   }
+  if('Notification' in window&&Notification.permission==='granted'){notifyBtn.textContent='Notificações ativas';notifyBtn.disabled=true;}
   window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();state.deferredInstall=e;installBtn.hidden=false;});
-  window.addEventListener('appinstalled',()=>{installBtn.hidden=true;state.deferredInstall=null;toast('Aplicação instalada.');});
+  window.addEventListener('appinstalled',()=>{installBtn.hidden=true;state.deferredInstall=null;toast('Aplicação instalada.','PWA');});
   installBtn.addEventListener('click',async()=>{
     if(state.deferredInstall){state.deferredInstall.prompt();await state.deferredInstall.userChoice;state.deferredInstall=null;installBtn.hidden=true;return;}
-    const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-    toast(isiOS?'No iPhone/iPad: Partilhar → Adicionar ao ecrã principal.':'Usa a opção do browser “Instalar aplicação” ou “Adicionar ao ecrã principal”.');
+    const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);toast(isiOS?'No iPhone/iPad: Partilhar → Adicionar ao ecrã principal.':'Usa a opção do browser “Instalar aplicação” ou “Adicionar ao ecrã principal”.','PWA');
   });
 }
 
@@ -666,16 +854,17 @@ window.addEventListener('resize',()=>{if(!coinModal.hidden&&state.detailCoinId){
 
 refreshBtn.addEventListener('click',()=>refresh());
 universeSel.addEventListener('change',()=>{saveSettings();state.chartCache.clear();state.historyUnavailable.clear();refresh();});
-volSel.addEventListener('change',()=>{saveSettings();render();scanAlerts();});
+volSel.addEventListener('change',()=>{saveSettings();render();scanAlerts({force:true});});
 countSel.addEventListener('change',()=>{saveSettings();render();});
 currencySel.addEventListener('change',()=>{state.currency=currencySel.value;saveSettings();state.chartCache.clear();state.historyUnavailable.clear();refresh();});
 autoSwitch.addEventListener('click',()=>{state.autoRefresh=!state.autoRefresh;autoSwitch.setAttribute('aria-checked',String(state.autoRefresh));saveSettings();scheduleNext();});
+scannerBtn.addEventListener('click',()=>scanAlerts({force:true}));
 notifyBtn.addEventListener('click',requestNotifications);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden && state.autoRefresh){ if(!state.lastUpdated || Date.now()-state.lastUpdated>CONFIG.AUTO_MS) refresh({auto:true}); else scheduleNext(); } else clearTimeout(state.timer);});
 window.addEventListener('storage',e=>{if(e.key===CONFIG.MARKET_CACHE_KEY && !state.loading){loadMarketCache();}});
 
 loadSettings(); autoSwitch.setAttribute('aria-checked',String(state.autoRefresh)); state.currency=currencySel.value;
-setupPWA(); loadServerAlerts(); loadMarketCache(); refresh().then(()=>{try{const q=new URLSearchParams(location.search),id=q.get('coin');if(id){const c=state.data.find(x=>x.id===id);if(c) openCoinDetail(c);}}catch(_){}});
+loadTechNotified(); loadTechCache(); setupPWA(); loadMarketCache(); refresh().then(()=>{try{const q=new URLSearchParams(location.search),id=q.get('coin');if(id){const c=state.data.find(x=>x.id===id);if(c) openCoinDetail(c);}}catch(_){}});
 </script>
 </body>
 </html>

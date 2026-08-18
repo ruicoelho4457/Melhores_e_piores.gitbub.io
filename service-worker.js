@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'crypto-movers-pwa-v2';
+const CACHE_NAME = 'crypto-movers-pwa-v6-pine';
 const APP_SHELL = ['/', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', event => {
@@ -47,9 +47,9 @@ self.addEventListener('push', event => {
   try { payload = event.data ? event.data.json() : {}; }
   catch (_) { payload = { body: event.data ? event.data.text() : '' }; }
 
-  const title = payload.title || 'Crypto Movers — alerta';
+  const title = payload.title || 'Crypto Movers — sinal técnico';
   const options = {
-    body: payload.body || 'Novo sinal de momentum confirmado.',
+    body: payload.body || 'Novo sinal BUY/SELL confirmado em 4H, 1D ou 1W.',
     icon: '/icon-192.png',
     badge: '/icon-192.png',
     tag: payload.tag || 'crypto-movers-alert',
