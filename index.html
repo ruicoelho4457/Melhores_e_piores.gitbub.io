@@ -159,6 +159,7 @@ const CONFIG = Object.freeze({
   PAGE_DELAY_MS: 350,
   CHART_DELAY_MS: 300,
   CHART_CACHE_MS: 90000,
+  HISTORY_UNAVAILABLE_CACHE_MS: 10 * 60 * 1000,
   ALERT_THRESHOLD: 2,
   ALERT_SEGMENTS: 4,
   // 4 períodos >2% => mínimo composto ≈ 8,2432%. Usa-se 7,5% apenas como pré-filtro
@@ -172,7 +173,7 @@ const CONFIG = Object.freeze({
 
 const state = {
   data: [], autoRefresh: true, timer: null, loading: false, lastUpdated: null,
-  currency: 'usd', alertSignals: [], notifiedBuckets: new Set(), chartCache: new Map(),
+  currency: 'usd', alertSignals: [], notifiedBuckets: new Set(), chartCache: new Map(), historyUnavailable: new Map(),
   audioCtx: null, consecutiveFailures: 0, alertScanning: false, detailCoinId: null, detailRequestToken: 0, deferredInstall: null, swRegistration: null
 };
 
@@ -300,11 +301,16 @@ async function fetchJSON(url,{timeout=CONFIG.FETCH_TIMEOUT_MS,retries=2}={}){
 }
 
 function describeError(err){
+  if(err?.code==='HISTORY_UNAVAILABLE') return 'a CoinGecko não disponibiliza histórico intradiário suficiente para esta moeda';
   if(err?.name==='AbortError') return 'tempo limite do pedido excedido';
-  if(err?.message==='RATE_LIMIT'||err?.status===429) return 'limite de pedidos da CoinGecko atingido';
+  if(err?.message==='RATE_LIMIT'||err?.status===429) return 'limite temporário de pedidos da CoinGecko atingido';
+  if(err?.status===404) return 'histórico não encontrado na CoinGecko';
   if(String(err?.message||'').startsWith('HTTP_')) return 'API respondeu '+String(err.message).replace('HTTP_','HTTP ');
-  if(err instanceof TypeError) return 'falha de rede ou bloqueio CORS';
+  if(err instanceof TypeError) return 'não foi possível contactar a API a partir deste dispositivo';
   return err?.message || 'erro desconhecido';
+}
+function historyError(message='HISTORY_UNAVAILABLE'){
+  const e=new Error(message); e.code='HISTORY_UNAVAILABLE'; return e;
 }
 
 async function fetchMarket(){
@@ -369,11 +375,30 @@ function marketChartCacheKey(id){ return state.currency+':'+id; }
 async function fetchOneDayChart(id){
   const key=marketChartCacheKey(id),cached=state.chartCache.get(key);
   if(cached && Date.now()-cached.ts<CONFIG.CHART_CACHE_MS) return cached.prices;
+  const unavailable=state.historyUnavailable.get(key);
+  if(unavailable && Date.now()-unavailable.ts<CONFIG.HISTORY_UNAVAILABLE_CACHE_MS) throw historyError();
+
   const url=`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(id)}/market_chart?vs_currency=${encodeURIComponent(state.currency)}&days=${CONFIG.ALERT_HISTORY_DAYS}`;
-  const data=await fetchJSON(url,{retries:1});
-  if(!Array.isArray(data?.prices)||data.prices.length<10) throw new Error('histórico intradiário insuficiente');
-  const prices=data.prices.filter(x=>Array.isArray(x)&&Number.isFinite(Number(x[0]))&&Number.isFinite(Number(x[1]))).map(x=>[Number(x[0]),Number(x[1])]).sort((a,b)=>a[0]-b[0]);
-  state.chartCache.set(key,{ts:Date.now(),prices}); return prices;
+  try{
+    const data=await fetchJSON(url,{retries:1});
+    const prices=Array.isArray(data?.prices)
+      ? data.prices.filter(x=>Array.isArray(x)&&Number.isFinite(Number(x[0]))&&Number.isFinite(Number(x[1]))).map(x=>[Number(x[0]),Number(x[1])]).sort((a,b)=>a[0]-b[0])
+      : [];
+    // Para calcular 4 blocos de 15 min precisamos de cobertura temporal suficiente,
+    // não apenas de um número arbitrário de pontos.
+    const coverage=prices.length>1 ? prices[prices.length-1][0]-prices[0][0] : 0;
+    if(prices.length<10 || coverage<65*60*1000){
+      state.historyUnavailable.set(key,{ts:Date.now()});
+      throw historyError();
+    }
+    state.historyUnavailable.delete(key);
+    state.chartCache.set(key,{ts:Date.now(),prices}); return prices;
+  }catch(err){
+    if(err?.code==='HISTORY_UNAVAILABLE') throw err;
+    // 404 significa que existe a moeda no mercado agregado, mas não há histórico utilizável.
+    if(err?.status===404){ state.historyUnavailable.set(key,{ts:Date.now()}); throw historyError(); }
+    throw err;
+  }
 }
 
 function priceAtOrBefore(prices,target,maxGapMs=8*60*1000){
@@ -414,6 +439,37 @@ function drawDetailChart(canvas,prices){
 function makeStat(label,value,cls=''){
   const box=el('div','stat'),l=el('div','stat-label',label),v=el('div','stat-value '+cls,value); box.append(l,v); return box;
 }
+function renderCoinDetailUnavailable(c,err){
+  detailAlertStatus.className='detail-status';
+  detailAlertStatus.textContent='Histórico 15m indisponível';
+  const frag=document.createDocumentFragment(), stats=el('div','stat-grid');
+  stats.append(
+    makeStat('Preço',fmtPrice(c.current_price)),
+    makeStat('1 hora*',fmtPct(c.price_change_percentage_1h_in_currency),pctClass(c.price_change_percentage_1h_in_currency)),
+    makeStat('24 horas',fmtPct(c.price_change_percentage_24h),pctClass(c.price_change_percentage_24h)),
+    makeStat('Market cap',fmtCompact(c.market_cap)),
+    makeStat('Volume 24h',fmtCompact(c.total_volume)),
+    makeStat('Máximo 24h',fmtPrice(c.high_24h)),
+    makeStat('Mínimo 24h',fmtPrice(c.low_24h))
+  );
+  frag.append(stats);
+
+  const section=el('section','detail-section');
+  const title=el('div','detail-section-title','Histórico intradiário indisponível');
+  const box=el('div','detail-error');
+  box.append(
+    document.createTextNode(describeError(err)+'. '),
+    document.createTextNode('Os dados atuais continuam válidos, mas esta moeda fica excluída da validação 4 × 15 min até existir histórico suficiente.')
+  );
+  section.append(title,box); frag.append(section);
+
+  const actions=el('div','detail-actions');
+  const note=el('div','detail-note','* A variação de 1h apresentada aqui vem do endpoint agregado de mercado; não substitui os quatro blocos de 15 minutos.');
+  const link=el('a','external-link','Abrir na CoinGecko ↗');
+  link.href='https://www.coingecko.com/en/coins/'+encodeURIComponent(c.id); link.target='_blank'; link.rel='noopener noreferrer';
+  actions.append(note,link); frag.append(actions); detailBody.replaceChildren(frag);
+}
+
 function renderCoinDetail(c,prices){
   const seg=validateFourSegments(prices), p15=changeOverMinutes(prices,15),p30=changeOverMinutes(prices,30),p45=changeOverMinutes(prices,45),p60=changeOverMinutes(prices,60);
   detailAlertStatus.className='detail-status'+(seg?.valid?' active':''); detailAlertStatus.textContent=seg?.valid?'● ALERTA 4 × 15 MIN ATIVO':'Sem alerta 4 × 15 min';
@@ -431,7 +487,11 @@ async function openCoinDetail(c){
   if(typeof c.image==='string'&&c.image.startsWith('https://')){detailImage.src=c.image;detailImage.hidden=false}else detailImage.hidden=true;
   detailBody.replaceChildren(el('div','detail-loading','A carregar histórico intradiário…')); coinModal.hidden=false; document.body.style.overflow='hidden'; detailClose.focus({preventScroll:true});
   try{ const prices=await fetchOneDayChart(c.id); if(token!==state.detailRequestToken||coinModal.hidden) return; const live=state.data.find(x=>x.id===c.id)||c; renderCoinDetail(live,prices); }
-  catch(err){ if(token!==state.detailRequestToken||coinModal.hidden) return; detailAlertStatus.textContent='Histórico indisponível'; detailBody.replaceChildren(el('div','detail-error','Não foi possível carregar o histórico: '+describeError(err))); }
+  catch(err){
+    if(token!==state.detailRequestToken||coinModal.hidden) return;
+    const live=state.data.find(x=>x.id===c.id)||c;
+    renderCoinDetailUnavailable(live,err);
+  }
 }
 
 function renderAlerts(){
@@ -477,7 +537,7 @@ async function scanAlerts(){
     const candidates=eligible.filter(c=>Number(c.price_change_percentage_1h_in_currency)>=CONFIG.ALERT_PREFILTER_1H).sort((a,b)=>b.price_change_percentage_1h_in_currency-a.price_change_percentage_1h_in_currency);
     if(!candidates.length){ alertScanStatus.textContent='0 candidatas no pré-filtro 1h'; return; }
     alertScanStatus.textContent=`a validar ${candidates.length} candidata${candidates.length===1?'':'s'}…`;
-    let confirmed=0, failed=0;
+    let confirmed=0, failed=0, unavailable=0;
     for(let i=0;i<candidates.length;i++){
       const c=candidates[i];
       try{
@@ -489,11 +549,11 @@ async function scanAlerts(){
           if(existing>=0) state.alertSignals[existing]=signal; else state.alertSignals.unshift(signal);
           if(!state.notifiedBuckets.has(key)){ state.notifiedBuckets.add(key); notifySignal(signal); }
         }
-      }catch(_){ failed++; }
+      }catch(err){ if(err?.code==='HISTORY_UNAVAILABLE') unavailable++; else failed++; }
       if(i<candidates.length-1) await sleep(CONFIG.CHART_DELAY_MS);
     }
     state.alertSignals.sort((a,b)=>b.endTs-a.endTs); renderAlerts();
-    alertScanStatus.textContent=`${confirmed} sinal${confirmed===1?'':'is'} · ${candidates.length} validada${candidates.length===1?'':'s'}${failed?' · '+failed+' falha(s)':''}`;
+    alertScanStatus.textContent=`${confirmed} sinal${confirmed===1?'':'is'} · ${candidates.length} validada${candidates.length===1?'':'s'}${unavailable?' · '+unavailable+' sem histórico':''}${failed?' · '+failed+' falha(s)':''}`;
   }finally{
     state.alertScanning=false;
   }
@@ -605,10 +665,10 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!coinModal.hidden) 
 window.addEventListener('resize',()=>{if(!coinModal.hidden&&state.detailCoinId){const canvas=detailBody.querySelector('canvas');const cached=state.chartCache.get(marketChartCacheKey(state.detailCoinId));if(canvas&&cached?.prices) drawDetailChart(canvas,cached.prices);}});
 
 refreshBtn.addEventListener('click',()=>refresh());
-universeSel.addEventListener('change',()=>{saveSettings();state.chartCache.clear();refresh();});
+universeSel.addEventListener('change',()=>{saveSettings();state.chartCache.clear();state.historyUnavailable.clear();refresh();});
 volSel.addEventListener('change',()=>{saveSettings();render();scanAlerts();});
 countSel.addEventListener('change',()=>{saveSettings();render();});
-currencySel.addEventListener('change',()=>{state.currency=currencySel.value;saveSettings();state.chartCache.clear();refresh();});
+currencySel.addEventListener('change',()=>{state.currency=currencySel.value;saveSettings();state.chartCache.clear();state.historyUnavailable.clear();refresh();});
 autoSwitch.addEventListener('click',()=>{state.autoRefresh=!state.autoRefresh;autoSwitch.setAttribute('aria-checked',String(state.autoRefresh));saveSettings();scheduleNext();});
 notifyBtn.addEventListener('click',requestNotifications);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden && state.autoRefresh){ if(!state.lastUpdated || Date.now()-state.lastUpdated>CONFIG.AUTO_MS) refresh({auto:true}); else scheduleNext(); } else clearTimeout(state.timer);});

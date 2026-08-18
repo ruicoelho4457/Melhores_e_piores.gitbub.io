@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'crypto-movers-pwa-v1';
+const CACHE_NAME = 'crypto-movers-pwa-v2';
 const APP_SHELL = ['/', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', event => {
