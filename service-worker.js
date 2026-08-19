@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'crypto-movers-pwa-v6-pine';
+const CACHE_NAME = 'crypto-movers-pwa-v7-cvd-whales';
 const APP_SHELL = ['/', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', event => {
@@ -49,7 +49,7 @@ self.addEventListener('push', event => {
 
   const title = payload.title || 'Crypto Movers — sinal técnico';
   const options = {
-    body: payload.body || 'Novo sinal BUY/SELL confirmado em 4H, 1D ou 1W.',
+    body: payload.body || 'Novo sinal Pine ou Whale Flow confirmado.',
     icon: '/icon-192.png',
     badge: '/icon-192.png',
     tag: payload.tag || 'crypto-movers-alert',

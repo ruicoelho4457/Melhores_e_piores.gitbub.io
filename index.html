@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Movers — Scanner Pine 4H · 1D · 1W</title>
+<title>Movers — Scanner Pine + CVD Taker + Whale Flow</title>
 <meta name="theme-color" content="#0A0D12">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -87,7 +87,7 @@
   @media(prefers-reduced-motion:reduce){.ticker-track{animation:none}.btn .spin{animation:none}}
 
 
-  /* ---- Scanner técnico Pine v11-R: 4H · 1D · 1W ---- */
+  /* ---- Scanner técnico Pine v11-R + CVD Taker + Whale Flow ---- */
   .tech-signal-labels,.tech-signal{display:grid;grid-template-columns:minmax(150px,1.3fr) 52px 62px 64px minmax(220px,2fr) 104px;gap:10px;align-items:center}
   .tech-signal-labels{padding:8px 18px;color:var(--muted);font:9.5px 'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line)}
   .tech-signal{padding:11px 18px;border-bottom:1px solid var(--line);font:11.5px 'IBM Plex Mono',monospace;cursor:pointer}
@@ -101,6 +101,11 @@
   .tech-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tech-tf-card{border:1px solid var(--line);border-radius:9px;padding:12px;background:var(--panel-2)}
   .tech-tf-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:9px}.tech-tf-name{font:700 12px 'IBM Plex Mono',monospace;color:var(--blue)}
   .tech-state{font:700 10px 'IBM Plex Mono',monospace;border-radius:999px;padding:3px 7px;border:1px solid var(--line);color:var(--muted)}.tech-state.buy{color:var(--gain);border-color:rgba(47,217,166,.5)}.tech-state.sell{color:var(--loss);border-color:rgba(255,107,94,.5)}
+  .dir-pill.whale-buy,.tech-state.whale-buy{color:var(--gain);border-color:rgba(47,217,166,.65);background:rgba(47,217,166,.08)}
+  .dir-pill.whale-sell,.tech-state.whale-sell{color:var(--loss);border-color:rgba(255,107,94,.65);background:rgba(255,107,94,.08)}
+  .section-strip{padding:8px 18px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.018);font:700 10px 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .whale-confirm{font-weight:700}.whale-confirm.positive{color:var(--gain)}.whale-confirm.negative{color:var(--loss)}.whale-confirm.neutral{color:var(--muted)}
+  .whale-card{margin-top:10px;border:1px solid rgba(88,166,255,.35);border-radius:9px;padding:12px;background:rgba(88,166,255,.035)}
   .tech-scores{display:flex;gap:10px;font:11px 'IBM Plex Mono',monospace;margin-bottom:7px}.tech-scores .buy{color:var(--gain)}.tech-scores .sell{color:var(--loss)}
   .tech-reasons{color:var(--muted);font:10px 'IBM Plex Mono',monospace;line-height:1.5;min-height:31px}.tech-source{margin-top:8px;color:var(--muted);font:9.5px 'IBM Plex Mono',monospace}
   @media(max-width:850px){.tech-signal-labels,.tech-signal{grid-template-columns:minmax(130px,1.2fr) 48px 58px 58px minmax(160px,1.5fr)}.tech-signal-labels span:last-child,.tech-signal .tech-close{display:none}}
@@ -132,9 +137,9 @@
     <div class="alert-card">
       <div class="alert-head">
         <div>
-          <div class="alert-title" id="alertTitle"><span class="bell">●</span> Scanner de confluência — 4H · Diário · Semanal</div>
-          <div class="alert-meta">PINE v11-R · score mínimo 3 · cooldown 6 barras · apenas velas fechadas · dados Binance Spot USDT</div>
-          <div class="tech-summary"><span class="summary-chip">4H: cooldown 24h</span><span class="summary-chip">1D: cooldown 6 dias</span><span class="summary-chip">1W: cooldown 6 semanas</span></div>
+          <div class="alert-title" id="alertTitle"><span class="bell">●</span> Scanner de confluência + Whale Flow — 4H · Diário · Semanal</div>
+          <div class="alert-meta">PINE v11-R · score mínimo 3 · cooldown 6 · CVD por taker buy/sell Binance · Whale Flow ≥ $1M</div>
+          <div class="tech-summary"><span class="summary-chip">4H: cooldown 24h</span><span class="summary-chip">1D: 6 dias</span><span class="summary-chip">1W: 6 semanas</span><span class="summary-chip">🐋 Whale ≥ $1M</span></div>
         </div>
         <div class="alert-actions">
           <span class="alert-meta" id="alertScanStatus">a aguardar dados…</span>
@@ -144,7 +149,7 @@
         </div>
       </div>
       <div class="scanner-progress" aria-hidden="true"><span id="scannerProgress"></span></div>
-      <div class="alert-body" id="alertBody"><div class="alert-empty">Ainda não existem sinais BUY/SELL confirmados nas últimas velas fechadas.</div></div>
+      <div class="alert-body" id="alertBody"><div class="alert-empty">Ainda não existem sinais Pine ou Whale Flow confirmados.</div></div>
     </div>
   </section>
 
@@ -172,7 +177,7 @@
   </div>
 
   <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
-  <footer>Dados de mercado geral: CoinGecko. Scanner técnico: candles Binance Spot USDT, apenas velas fechadas, nos timeframes 4H, 1D e 1W. A lógica de BUY/SELL replica o sistema de pontuação do Pine Script v11-R fornecido, com score mínimo 3 e cooldown de 6 barras. Moedas sem par USDT compatível na Binance não entram no scanner. Não é aconselhamento de investimento.</footer>
+  <footer>Dados de mercado geral: CoinGecko. Scanner técnico: Binance Spot USDT, 4H/1D/1W e apenas velas fechadas. O CVD usa volume taker comprador/vendedor dos klines Binance. Whale Flow usa os aggTrades mais recentes e classifica negócios ≥ $1M USDT; por desempenho, analisa mercados prioritários e todos os sinais Pine, não todo o universo. Score Pine mínimo 3 e cooldown 6. Não é aconselhamento de investimento.</footer>
 
 <script>
 'use strict';
@@ -198,9 +203,21 @@ const CONFIG = Object.freeze({
   TECH_4H_LIMIT: 500,
   TECH_1D_LIMIT: 500,
   TECH_1W_LIMIT: 180,
-  TECH_CACHE_KEY: 'movers-tech-signals-v6',
-  TECH_NOTIFIED_KEY: 'movers-tech-notified-v6',
+  TECH_CACHE_KEY: 'movers-tech-signals-v7',
+  TECH_NOTIFIED_KEY: 'movers-tech-notified-v7',
   BINANCE_BASES: ['https://data-api.binance.vision','https://api.binance.com'],
+
+  // Whale Flow — confirmação separada; não altera o score Pine.
+  WHALE_THRESHOLD_USDT: 1_000_000,
+  WHALE_MEGA_THRESHOLD_USDT: 5_000_000,
+  WHALE_MIN_GROSS_USDT: 2_000_000,
+  WHALE_MIN_DIRECTION_RATIO: 0.60,
+  WHALE_RECENT_LIMIT: 1000,
+  WHALE_PRIORITY_MARKET_CAP: 40,
+  WHALE_PRIORITY_GAINERS: 10,
+  WHALE_PRIORITY_LOSERS: 10,
+  WHALE_CONCURRENCY: 3,
+  WHALE_CACHE_MS: 5 * 60 * 1000,
 
   EMA_FAST: 21,
   EMA_SLOW: 72,
@@ -231,7 +248,8 @@ const state = {
   deferredInstall: null, swRegistration: null,
 
   techScanning: false, techLastScan: 0, techLastScanKey: '', techAnalyses: new Map(),
-  techSignals: [], techNotified: new Set(), binancePairs: null, binancePairsPromise: null
+  techSignals: [], whaleSignals: [], whaleAnalyses: new Map(), techNotified: new Set(),
+  binancePairs: null, binancePairsPromise: null
 };
 
 const $ = id => document.getElementById(id);
@@ -272,6 +290,30 @@ function fmtPct(p){
 function fmtAge(ts){
   if(!ts) return '—'; const sec=Math.max(0,Math.floor((Date.now()-ts)/1000));
   if(sec<60) return sec+'s'; if(sec<3600) return Math.floor(sec/60)+'min'; return Math.floor(sec/3600)+'h';
+}
+function fmtDuration(ms){
+  if(!Number.isFinite(Number(ms)) || ms<0) return '—';
+  const sec=Math.floor(ms/1000);
+  if(sec<60) return sec+'s';
+  if(sec<3600) return Math.floor(sec/60)+'min';
+  if(sec<86400) return (sec/3600).toFixed(sec<7200?1:0)+'h';
+  return (sec/86400).toFixed(1)+'d';
+}
+function fmtUSDT(v){
+  v=Number(v); if(!Number.isFinite(v)) return '—';
+  const a=Math.abs(v), sign=v<0?'-':v>0?'+':'';
+  if(a>=1e9) return sign+'$'+(a/1e9).toFixed(2)+'B';
+  if(a>=1e6) return sign+'$'+(a/1e6).toFixed(2)+'M';
+  if(a>=1e3) return sign+'$'+(a/1e3).toFixed(0)+'K';
+  return sign+'$'+a.toFixed(0);
+}
+function fmtSignedNum(v){
+  v=Number(v); if(!Number.isFinite(v)) return '—';
+  const sign=v>0?'+':v<0?'-':''; const a=Math.abs(v);
+  if(a>=1e9) return sign+(a/1e9).toFixed(2)+'B';
+  if(a>=1e6) return sign+(a/1e6).toFixed(2)+'M';
+  if(a>=1e3) return sign+(a/1e3).toFixed(2)+'K';
+  return sign+a.toFixed(a<10?3:a<100?2:1);
 }
 function fmtCompact(v){
   if(v == null || !Number.isFinite(Number(v))) return '—';
@@ -539,43 +581,116 @@ async function openCoinDetail(c){
   }
 }
 
-function tfOrder(tf){ return tf==='4H'?0:tf==='1D'?1:2; }
+function tfOrder(tf){ return tf==='4H'?0:tf==='1D'?1:tf==='1W'?2:3; }
 function signalKey(s){ return `${s.id}:${s.timeframe}:${s.direction}:${s.closeTime}`; }
+function whaleSignalKey(w){ return `whale:${w.id}:${w.direction}:${w.lastWhaleAggId||w.lastWhaleTime||0}`; }
 function scanConfigKey(){ return `${universeSel.value}:${volSel.value}`; }
 
 function loadTechNotified(){
-  try{ const a=JSON.parse(localStorage.getItem(CONFIG.TECH_NOTIFIED_KEY)||'[]'); if(Array.isArray(a)) state.techNotified=new Set(a.slice(-600)); }catch(_){ }
+  try{ const a=JSON.parse(localStorage.getItem(CONFIG.TECH_NOTIFIED_KEY)||'[]'); if(Array.isArray(a)) state.techNotified=new Set(a.slice(-1000)); }catch(_){ }
 }
 function saveTechNotified(){
-  try{ localStorage.setItem(CONFIG.TECH_NOTIFIED_KEY,JSON.stringify([...state.techNotified].slice(-600))); }catch(_){ }
+  try{ localStorage.setItem(CONFIG.TECH_NOTIFIED_KEY,JSON.stringify([...state.techNotified].slice(-1000))); }catch(_){ }
 }
 function saveTechCache(){
-  try{ localStorage.setItem(CONFIG.TECH_CACHE_KEY,JSON.stringify({ts:state.techLastScan,key:state.techLastScanKey,signals:state.techSignals.slice(0,100)})); }catch(_){ }
+  try{
+    localStorage.setItem(CONFIG.TECH_CACHE_KEY,JSON.stringify({
+      ts:state.techLastScan,key:state.techLastScanKey,
+      signals:state.techSignals.slice(0,100),whales:state.whaleSignals.slice(0,100)
+    }));
+  }catch(_){ }
 }
 function loadTechCache(){
   try{
-    const c=JSON.parse(localStorage.getItem(CONFIG.TECH_CACHE_KEY)||'null'); if(!c||!Array.isArray(c.signals)) return;
-    state.techLastScan=Number(c.ts)||0; state.techLastScanKey=String(c.key||''); state.techSignals=c.signals; renderAlerts();
+    const c=JSON.parse(localStorage.getItem(CONFIG.TECH_CACHE_KEY)||'null');
+    if(!c) return;
+    state.techLastScan=Number(c.ts)||0; state.techLastScanKey=String(c.key||'');
+    state.techSignals=Array.isArray(c.signals)?c.signals:[];
+    state.whaleSignals=Array.isArray(c.whales)?c.whales:[];
+    renderAlerts();
     if(state.techLastScan) alertScanStatus.textContent=`último scanner: ${fmtAge(state.techLastScan)} atrás`;
   }catch(_){ }
+}
+
+function whaleSummaryText(w){
+  if(!w) return '';
+  const ratio=Math.round((w.direction==='BUY'?w.buyRatio:1-w.buyRatio)*100);
+  return `🐋 ${w.direction} ${ratio}% · net ${fmtUSDT(w.net)} · ${w.whaleCount} negócios`;
+}
+function whaleRelationForSignal(s){
+  const w=state.whaleSignals.find(x=>x.id===s.id);
+  if(!w) return null;
+  return {whale:w, aligned:w.direction===s.direction};
 }
 
 function renderAlerts(){
   alertBody.replaceChildren();
   const signals=[...state.techSignals].sort((a,b)=>tfOrder(a.timeframe)-tfOrder(b.timeframe)||b.closeTime-a.closeTime||b.score-a.score);
-  if(!signals.length){ alertBody.append(el('div','alert-empty','Sem sinais BUY/SELL confirmados na última vela fechada de 4H, 1D ou 1W.')); return; }
-  const labels=el('div','tech-signal-labels'); ['Moeda','TF','Sinal','Score','Confluências','Fecho'].forEach(t=>labels.append(el('span','',t))); alertBody.append(labels);
-  signals.slice(0,60).forEach(s=>{
-    const row=el('div','tech-signal'); row.tabIndex=0; row.setAttribute('role','button');
-    const coin=el('div','coin-name',s.name||s.symbol); coin.append(el('small','',`${String(s.symbol||'').toUpperCase()} · ${s.pair||'—'} · MC# ${s.marketCapRank||'—'}`));
-    const tf=el('div','tf-pill',s.timeframe), dir=el('div','dir-pill '+String(s.direction).toLowerCase(),s.direction), score=el('div','tech-score',String(s.score));
-    const criteria=el('div','tech-criteria',(s.criteria||[]).join(' · ')||'score atingido');
-    const close=el('div','tech-close',formatSignalClose(s));
-    row.append(coin,tf,dir,score,criteria,close);
-    const open=()=>{const c=state.data.find(x=>x.id===s.id)||{id:s.id,name:s.name,symbol:s.symbol,market_cap_rank:s.marketCapRank,current_price:s.current};openCoinDetail(c)};
-    row.addEventListener('click',open); row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
-    alertBody.append(row);
-  });
+  const whales=[...state.whaleSignals].sort((a,b)=>b.lastWhaleTime-a.lastWhaleTime||Math.abs(b.net)-Math.abs(a.net));
+
+  if(!signals.length && !whales.length){
+    alertBody.append(el('div','alert-empty','Sem sinais BUY/SELL e sem Whale Flow direcional nos dados recentes analisados.'));
+    return;
+  }
+
+  if(signals.length){
+    alertBody.append(el('div','section-strip','Sinais Pine — continuam independentes do Whale Flow'));
+    const labels=el('div','tech-signal-labels');
+    ['Moeda','TF','Sinal','Score','Confluências','Fecho'].forEach(t=>labels.append(el('span','',t)));
+    alertBody.append(labels);
+
+    signals.slice(0,60).forEach(s=>{
+      const row=el('div','tech-signal'); row.tabIndex=0; row.setAttribute('role','button');
+      const coin=el('div','coin-name',s.name||s.symbol);
+      coin.append(el('small','',`${String(s.symbol||'').toUpperCase()} · ${s.pair||'—'} · MC# ${s.marketCapRank||'—'}`));
+      const tf=el('div','tf-pill',s.timeframe);
+      const dir=el('div','dir-pill '+String(s.direction).toLowerCase(),s.direction);
+      const score=el('div','tech-score',String(s.score));
+      const relation=whaleRelationForSignal(s);
+      const critText=(s.criteria||[]).join(' · ')||'score atingido';
+      const criteria=el('div','tech-criteria',critText);
+      if(relation){
+        const note=el('div','whale-confirm '+(relation.aligned?'positive':'negative'),
+          (relation.aligned?'CONFIRMAÇÃO WHALE · ':'DIVERGÊNCIA WHALE · ')+whaleSummaryText(relation.whale));
+        criteria.append(document.createElement('br'),note);
+      }
+      const close=el('div','tech-close',formatSignalClose(s));
+      row.append(coin,tf,dir,score,criteria,close);
+      const open=()=>{const c=state.data.find(x=>x.id===s.id)||{id:s.id,name:s.name,symbol:s.symbol,market_cap_rank:s.marketCapRank,current_price:s.current};openCoinDetail(c)};
+      row.addEventListener('click',open);
+      row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
+      alertBody.append(row);
+    });
+  }
+
+  if(whales.length){
+    alertBody.append(el('div','section-strip','Whale Flow ≥ $1M — alerta separado; não é BUY/SELL Pine'));
+    const labels=el('div','tech-signal-labels');
+    ['Moeda','TF','Fluxo','Score','Dados whale','Último'].forEach(t=>labels.append(el('span','',t)));
+    alertBody.append(labels);
+
+    whales.slice(0,60).forEach(w=>{
+      const row=el('div','tech-signal'); row.tabIndex=0; row.setAttribute('role','button');
+      const coin=el('div','coin-name',w.name||w.symbol);
+      coin.append(el('small','',`${String(w.symbol||'').toUpperCase()} · ${w.pair||'—'} · MC# ${w.marketCapRank||'—'}`));
+      const tf=el('div','tf-pill','FLOW');
+      const dir=el('div','dir-pill '+(w.direction==='BUY'?'whale-buy':'whale-sell'),'WHALE '+w.direction);
+      const score=el('div','tech-score','—');
+      const sideRatio=Math.round((w.direction==='BUY'?w.buyRatio:1-w.buyRatio)*100);
+      const pineHere=state.techSignals.some(s=>s.id===w.id);
+      const criteria=el('div','tech-criteria',
+        `${w.whaleCount} negócios ≥ $1M · buy ${fmtUSDT(w.buyVolume)} · sell ${fmtUSDT(w.sellVolume)} · net ${fmtUSDT(w.net)} · ${sideRatio}% ${w.direction}`);
+      criteria.append(document.createElement('br'),
+        el('span','whale-confirm '+(pineHere?'positive':'neutral'),
+          pineHere?'Existe também sinal Pine nesta moeda':'WHALE ONLY · sem sinal Pine atual'));
+      const close=el('div','tech-close',new Date(w.lastWhaleTime).toLocaleString('pt-PT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}));
+      row.append(coin,tf,dir,score,criteria,close);
+      const open=()=>{const c=state.data.find(x=>x.id===w.id)||{id:w.id,name:w.name,symbol:w.symbol,market_cap_rank:w.marketCapRank,current_price:w.current};openCoinDetail(c)};
+      row.addEventListener('click',open);
+      row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
+      alertBody.append(row);
+    });
+  }
 }
 function formatSignalClose(s){
   const d=new Date(Number(s.closeTime));
@@ -588,16 +703,32 @@ function toast(message,title='SCANNER'){
 function beep(){
   try{
     if(!state.audioCtx) state.audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-    const osc=state.audioCtx.createOscillator(),gain=state.audioCtx.createGain(); osc.frequency.value=880; gain.gain.setValueAtTime(.06,state.audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(.001,state.audioCtx.currentTime+.35); osc.connect(gain); gain.connect(state.audioCtx.destination); osc.start(); osc.stop(state.audioCtx.currentTime+.35);
+    const osc=state.audioCtx.createOscillator(),gain=state.audioCtx.createGain();
+    osc.frequency.value=880; gain.gain.setValueAtTime(.06,state.audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(.001,state.audioCtx.currentTime+.35);
+    osc.connect(gain); gain.connect(state.audioCtx.destination); osc.start(); osc.stop(state.audioCtx.currentTime+.35);
   }catch(_){ }
 }
 function notifySignal(signal){
-  const body=`${signal.name} (${String(signal.symbol).toUpperCase()}) · score ${signal.score} · ${(signal.criteria||[]).slice(0,4).join(' · ')}`;
+  const relation=whaleRelationForSignal(signal);
+  const whaleTxt=relation?` · ${relation.aligned?'WHALE confirma':'WHALE diverge'} ${fmtUSDT(relation.whale.net)}`:'';
+  const body=`${signal.name} (${String(signal.symbol).toUpperCase()}) · score ${signal.score} · ${(signal.criteria||[]).slice(0,4).join(' · ')}${whaleTxt}`;
   toast(body,`${signal.direction} ${signal.timeframe}`); beep();
   if('Notification' in window && Notification.permission==='granted' && state.swRegistration){
     state.swRegistration.showNotification(`${signal.direction} ${signal.timeframe} · ${String(signal.symbol).toUpperCase()}`,{
       body, tag:`pine-${signalKey(signal)}`, icon:'/icon-192.png', badge:'/icon-192.png',
       data:{url:'/?coin='+encodeURIComponent(signal.id),coinId:signal.id}, renotify:false
+    }).catch(()=>{});
+  }
+}
+function notifyWhale(w){
+  const sideRatio=Math.round((w.direction==='BUY'?w.buyRatio:1-w.buyRatio)*100);
+  const body=`${w.name} (${String(w.symbol).toUpperCase()}) · ${w.whaleCount} negócios ≥ $1M · net ${fmtUSDT(w.net)} · ${sideRatio}% ${w.direction}`;
+  toast(body,`WHALE ${w.direction}`); beep();
+  if('Notification' in window && Notification.permission==='granted' && state.swRegistration){
+    state.swRegistration.showNotification(`🐋 WHALE ${w.direction} · ${String(w.symbol).toUpperCase()}`,{
+      body, tag:`whale-${whaleSignalKey(w)}`, icon:'/icon-192.png', badge:'/icon-192.png',
+      data:{url:'/?coin='+encodeURIComponent(w.id),coinId:w.id}, renotify:false
     }).catch(()=>{});
   }
 }
@@ -639,9 +770,13 @@ function crossunder(a,b,i){ return i>0&&isFiniteNum(a[i])&&isFiniteNum(b[i])&&is
 
 function normalizeKlines(rows){
   const now=Date.now();
-  return (Array.isArray(rows)?rows:[]).filter(r=>Array.isArray(r)&&r.length>=7).map(r=>({
-    openTime:Number(r[0]),open:Number(r[1]),high:Number(r[2]),low:Number(r[3]),close:Number(r[4]),volume:Number(r[5]),closeTime:Number(r[6])
-  })).filter(b=>[b.openTime,b.open,b.high,b.low,b.close,b.volume,b.closeTime].every(Number.isFinite)&&b.closeTime<now-1000).sort((a,b)=>a.openTime-b.openTime);
+  return (Array.isArray(rows)?rows:[]).filter(r=>Array.isArray(r)&&r.length>=11).map(r=>({
+    openTime:Number(r[0]),open:Number(r[1]),high:Number(r[2]),low:Number(r[3]),close:Number(r[4]),
+    volume:Number(r[5]),closeTime:Number(r[6]),quoteVolume:Number(r[7]),tradeCount:Number(r[8]),
+    takerBuyBase:Number(r[9]),takerBuyQuote:Number(r[10])
+  })).filter(b=>[
+    b.openTime,b.open,b.high,b.low,b.close,b.volume,b.closeTime,b.quoteVolume,b.takerBuyBase,b.takerBuyQuote
+  ].every(Number.isFinite)&&b.closeTime<now-1000).sort((a,b)=>a.openTime-b.openTime);
 }
 function buildPineAnalysis(bars,timeframe){
   if(!Array.isArray(bars)||bars.length<90) return {timeframe,available:false,reason:'histórico insuficiente'};
@@ -649,7 +784,10 @@ function buildPineAnalysis(bars,timeframe){
   const emaFast=emaSeries(C,CONFIG.EMA_FAST), emaSlow=emaSeries(C,CONFIG.EMA_SLOW);
   const tr=C.map((_,i)=>i===0?H[i]-L[i]:Math.max(H[i]-L[i],Math.abs(H[i]-C[i-1]),Math.abs(L[i]-C[i-1])));
   const atr=rmaSeries(tr,CONFIG.ATR_LEN), atrComp=rmaSeries(tr,CONFIG.COMPRESSION_ATR_LEN), atrAvg=smaSeries(atrComp,CONFIG.COMPRESSION_ATR_AVG);
-  const cvdDelta=C.map((c,i)=>H[i]-L[i]>0?((2*c-H[i]-L[i])/(H[i]-L[i]))*V[i]:0), cvdSum=rollingSumSeries(cvdDelta,CONFIG.CVD_LOOKBACK), smoothCVD=emaSeries(cvdSum,CONFIG.CVD_SMOOTH);
+  // CVD Binance taker real: delta = taker buy base - taker sell base = 2*takerBuyBase - volume.
+  const takerBuy=bars.map(b=>b.takerBuyBase);
+  const cvdDelta=V.map((v,i)=>isFiniteNum(takerBuy[i]) ? 2*Number(takerBuy[i])-Number(v) : 0);
+  const cvdSum=rollingSumSeries(cvdDelta,CONFIG.CVD_LOOKBACK), smoothCVD=emaSeries(cvdSum,CONFIG.CVD_SMOOTH);
   const cvdSlope=Math.max(1,Math.round(CONFIG.CVD_SMOOTH/2));
   const stochRaw=new Array(n).fill(null);
   for(let i=CONFIG.STOCH_K-1;i<n;i++){const hh=Math.max(...H.slice(i-CONFIG.STOCH_K+1,i+1)),ll=Math.min(...L.slice(i-CONFIG.STOCH_K+1,i+1));stochRaw[i]=hh===ll?0:100*(C[i]-ll)/(hh-ll)}
@@ -703,7 +841,7 @@ function buildPineAnalysis(bars,timeframe){
     const sellSignal=scoreSell>=CONFIG.TECH_MIN_SCORE&&cooldownOk&&!compressed&&bodySell&&lastDir!==-1;
     if(buySignal){lastSignal=i;lastDir=1;} if(sellSignal){lastSignal=i;lastDir=-1;}
     if(i===n-1){
-      latest={timeframe,available:true,openTime:bars[i].openTime,closeTime:bars[i].closeTime,close:C[i],scoreBuy,scoreSell,buySignal,sellSignal,direction:buySignal?'BUY':sellSignal?'SELL':null,score:buySignal?scoreBuy:sellSignal?scoreSell:Math.max(scoreBuy,scoreSell),criteria:buySignal?buyParts:sellSignal?sellParts:(scoreBuy>=scoreSell?buyParts:sellParts),buyCriteria:buyParts,sellCriteria:sellParts,cooldownOk,compressed,postCompOk};
+      latest={timeframe,available:true,openTime:bars[i].openTime,closeTime:bars[i].closeTime,close:C[i],scoreBuy,scoreSell,buySignal,sellSignal,direction:buySignal?'BUY':sellSignal?'SELL':null,score:buySignal?scoreBuy:sellSignal?scoreSell:Math.max(scoreBuy,scoreSell),criteria:buySignal?buyParts:sellSignal?sellParts:(scoreBuy>=scoreSell?buyParts:sellParts),buyCriteria:buyParts,sellCriteria:sellParts,cooldownOk,compressed,postCompOk,cvdDelta:cvdDelta[i],cvdValue:smoothCVD[i]};
     }
   }
   return latest||{timeframe,available:false,reason:'sem cálculo'};
@@ -736,6 +874,67 @@ async function fetchKlines(pair,interval,limit){
   const data=await fetchBinanceJSON(`/api/v3/klines?symbol=${encodeURIComponent(pair)}&interval=${encodeURIComponent(interval)}&limit=${limit}`);
   return normalizeKlines(data);
 }
+async function fetchRecentAggTrades(pair){
+  return await fetchBinanceJSON(`/api/v3/aggTrades?symbol=${encodeURIComponent(pair)}&limit=${CONFIG.WHALE_RECENT_LIMIT}`);
+}
+function analyzeWhaleTrades(rows,c,pair){
+  const trades=(Array.isArray(rows)?rows:[]).map(r=>({
+    id:Number(r?.a),price:Number(r?.p),qty:Number(r?.q),time:Number(r?.T),buyerMaker:Boolean(r?.m)
+  })).filter(t=>[t.id,t.price,t.qty,t.time].every(Number.isFinite)&&t.price>0&&t.qty>0).sort((a,b)=>a.time-b.time);
+
+  let buyVolume=0,sellVolume=0,buyCount=0,sellCount=0,maxNotional=0,lastWhaleTime=0,lastWhaleAggId=0;
+  for(const t of trades){
+    const notional=t.price*t.qty;
+    if(notional<CONFIG.WHALE_THRESHOLD_USDT) continue;
+    maxNotional=Math.max(maxNotional,notional);
+    lastWhaleTime=Math.max(lastWhaleTime,t.time);
+    if(t.time===lastWhaleTime) lastWhaleAggId=t.id;
+    // m=true: comprador foi maker => agressor/taker foi vendedor.
+    if(t.buyerMaker){sellVolume+=notional;sellCount++;}
+    else{buyVolume+=notional;buyCount++;}
+  }
+  const gross=buyVolume+sellVolume, net=buyVolume-sellVolume, whaleCount=buyCount+sellCount;
+  const buyRatio=gross>0?buyVolume/gross:0.5;
+  const enoughActivity=gross>=CONFIG.WHALE_MIN_GROSS_USDT &&
+    (whaleCount>=2 || maxNotional>=CONFIG.WHALE_MEGA_THRESHOLD_USDT);
+  let direction=null;
+  if(enoughActivity && buyRatio>=CONFIG.WHALE_MIN_DIRECTION_RATIO) direction='BUY';
+  else if(enoughActivity && (1-buyRatio)>=CONFIG.WHALE_MIN_DIRECTION_RATIO) direction='SELL';
+
+  return {
+    id:c.id,name:c.name,symbol:c.symbol,marketCapRank:c.market_cap_rank,current:c.current_price,pair,
+    available:true,fetchedAt:Date.now(),direction,buyVolume,sellVolume,net,gross,buyRatio,
+    buyCount,sellCount,whaleCount,maxNotional,lastWhaleTime,lastWhaleAggId,
+    observedTrades:trades.length,
+    coverageStart:trades.length?trades[0].time:null,
+    coverageEnd:trades.length?trades[trades.length-1].time:null,
+    coverageMs:trades.length>1?trades[trades.length-1].time-trades[0].time:0
+  };
+}
+async function analyzeCoinWhale(c,pair,{force=false}={}){
+  const cached=state.whaleAnalyses.get(c.id);
+  if(!force&&cached&&Date.now()-cached.fetchedAt<CONFIG.WHALE_CACHE_MS) return cached;
+  try{
+    const rows=await fetchRecentAggTrades(pair);
+    const out=analyzeWhaleTrades(rows,c,pair);
+    state.whaleAnalyses.set(c.id,out); return out;
+  }catch(err){
+    const out={id:c.id,name:c.name,symbol:c.symbol,marketCapRank:c.market_cap_rank,pair,available:false,fetchedAt:Date.now(),reason:err?.status===429?'limite temporário Binance':(err?.message||'falha aggTrades')};
+    state.whaleAnalyses.set(c.id,out); return out;
+  }
+}
+function selectWhaleTargets(validCoins,signals){
+  const byId=new Map(validCoins.map(c=>[c.id,c]));
+  const selected=new Map();
+  for(const s of signals){const c=byId.get(s.id);if(c) selected.set(c.id,c);}
+  [...validCoins].sort((a,b)=>(a.market_cap_rank||1e9)-(b.market_cap_rank||1e9))
+    .slice(0,CONFIG.WHALE_PRIORITY_MARKET_CAP).forEach(c=>selected.set(c.id,c));
+  [...validCoins].sort((a,b)=>(b.price_change_percentage_24h||0)-(a.price_change_percentage_24h||0))
+    .slice(0,CONFIG.WHALE_PRIORITY_GAINERS).forEach(c=>selected.set(c.id,c));
+  [...validCoins].sort((a,b)=>(a.price_change_percentage_24h||0)-(b.price_change_percentage_24h||0))
+    .slice(0,CONFIG.WHALE_PRIORITY_LOSERS).forEach(c=>selected.set(c.id,c));
+  return [...selected.values()];
+}
 async function analyzeCoinTechnical(c,{force=false}={}){
   const cached=state.techAnalyses.get(c.id); if(!force&&cached&&Date.now()-cached.fetchedAt<CONFIG.TECH_ANALYSIS_CACHE_MS) return cached;
   let pair=null;
@@ -762,41 +961,144 @@ async function mapLimit(items,limit,worker){
 async function scanAlerts({force=false}={}){
   if(state.techScanning) return;
   const key=scanConfigKey();
-  if(!force&&state.techLastScan&&state.techLastScanKey===key&&Date.now()-state.techLastScan<CONFIG.TECH_SCAN_MIN_MS){renderAlerts();alertScanStatus.textContent=`scanner em cache · ${fmtAge(state.techLastScan)} atrás`;return;}
+  if(!force&&state.techLastScan&&state.techLastScanKey===key&&Date.now()-state.techLastScan<CONFIG.TECH_SCAN_MIN_MS){
+    renderAlerts();alertScanStatus.textContent=`scanner em cache · ${fmtAge(state.techLastScan)} atrás`;return;
+  }
+
   state.techScanning=true; scannerBtn.disabled=true; scannerBtn.textContent='A analisar…'; scannerProgress.style.width='0%';
   try{
     const eligible=filteredData(); alertScanStatus.textContent='a carregar pares Binance…';
-    const pairs=await ensureBinancePairs(); const candidates=eligible.filter(c=>pairs.has(String(c.symbol||'').toUpperCase())); const noPair=eligible.length-candidates.length;
-    if(!candidates.length){state.techSignals=[];renderAlerts();alertScanStatus.textContent=`0 moedas com par Binance USDT · ${noPair} sem par`;return;}
-    let failures=0,unavailable=0; const signals=[];
+    const pairs=await ensureBinancePairs();
+    const candidates=eligible.filter(c=>pairs.has(String(c.symbol||'').toUpperCase()));
+    const noPair=eligible.length-candidates.length;
+
+    if(!candidates.length){
+      state.techSignals=[];state.whaleSignals=[];renderAlerts();
+      alertScanStatus.textContent=`0 moedas com par Binance USDT · ${noPair} sem par`;
+      return;
+    }
+
+    let unavailable=0; const signals=[];
     await mapLimit(candidates,CONFIG.TECH_CONCURRENCY,async c=>{
-      const a=await analyzeCoinTechnical(c,{force}); if(!a.available){unavailable++;return;}
-      for(const tf of ['4H','1D','1W']){const s=signalFromAnalysis(c,a,tf);if(s){signals.push(s);const k=signalKey(s);if(!state.techNotified.has(k)){state.techNotified.add(k);saveTechNotified();notifySignal(s);}}}
-      await sleep(50);
+      const a=await analyzeCoinTechnical(c,{force});
+      if(!a.available){unavailable++;return;}
+      for(const tf of ['4H','1D','1W']){
+        const s=signalFromAnalysis(c,a,tf);
+        if(s) signals.push(s);
+      }
+      await sleep(40);
     });
-    state.techSignals=signals; state.techLastScan=Date.now(); state.techLastScanKey=key; renderAlerts(); saveTechCache();
-    alertScanStatus.textContent=`${signals.length} sinal${signals.length===1?'':'is'} · ${candidates.length} analisada${candidates.length===1?'':'s'} · ${noPair} sem par${unavailable?' · '+unavailable+' indisponíveis':''}${failures?' · '+failures+' falhas':''}`;
-  }catch(err){alertScanStatus.textContent='falha no scanner: '+(err?.message||'erro');toast('Falha ao consultar candles Binance.','SCANNER');}
-  finally{state.techScanning=false;scannerBtn.disabled=false;scannerBtn.textContent='Analisar sinais';scannerProgress.style.width='0%';}
+
+    // Whale Flow é uma camada independente e não altera o score Pine.
+    const validCoins=candidates.filter(c=>state.techAnalyses.get(c.id)?.available);
+    const whaleTargets=selectWhaleTargets(validCoins,signals);
+    alertScanStatus.textContent=`Pine concluído · a analisar Whale Flow 0/${whaleTargets.length}…`;
+    let whaleDone=0,whaleUnavailable=0; const whales=[];
+
+    await mapLimit(whaleTargets,CONFIG.WHALE_CONCURRENCY,async c=>{
+      const a=state.techAnalyses.get(c.id); const pair=a?.pair;
+      if(!pair){whaleUnavailable++;return;}
+      const w=await analyzeCoinWhale(c,pair,{force});
+      whaleDone++;
+      if(!w.available){whaleUnavailable++;return;}
+      if(w.direction) whales.push(w);
+      if(scannerProgress) scannerProgress.style.width=(whaleDone/Math.max(1,whaleTargets.length)*100).toFixed(1)+'%';
+      if(whaleDone%5===0||whaleDone===whaleTargets.length) alertScanStatus.textContent=`a analisar Whale Flow ${whaleDone}/${whaleTargets.length}…`;
+      await sleep(35);
+    });
+
+    state.techSignals=signals;
+    state.whaleSignals=whales;
+    state.techLastScan=Date.now();
+    state.techLastScanKey=key;
+    renderAlerts(); saveTechCache();
+
+    // Só notificar depois de termos a informação whale, para enriquecer o alerta Pine.
+    for(const s of signals){
+      const k=signalKey(s);
+      if(!state.techNotified.has(k)){
+        state.techNotified.add(k); saveTechNotified(); notifySignal(s);
+      }
+    }
+    for(const w of whales){
+      const k=whaleSignalKey(w);
+      if(!state.techNotified.has(k)){
+        state.techNotified.add(k); saveTechNotified(); notifyWhale(w);
+      }
+    }
+
+    alertScanStatus.textContent=
+      `${signals.length} Pine · ${whales.length} Whale · ${candidates.length} técnicas · ${whaleTargets.length} whale analisadas · ${noPair} sem par`+
+      `${unavailable?' · '+unavailable+' indisponíveis':''}${whaleUnavailable?' · '+whaleUnavailable+' whale indisponíveis':''}`;
+  }catch(err){
+    alertScanStatus.textContent='falha no scanner: '+(err?.message||'erro');
+    toast('Falha ao consultar dados Binance.','SCANNER');
+  }finally{
+    state.techScanning=false;scannerBtn.disabled=false;scannerBtn.textContent='Analisar sinais';scannerProgress.style.width='0%';
+  }
 }
 
 function buildTechnicalDetailSection(c){
-  const sec=el('section','detail-section'); sec.id='techDetailSection'; const title=el('div','detail-section-title'); title.append(document.createTextNode('Scanner Pine — 4H · Diário · Semanal'),el('small','',`score ≥ ${CONFIG.TECH_MIN_SCORE} · cooldown ${CONFIG.TECH_COOLDOWN}`)); sec.append(title);
+  const sec=el('section','detail-section'); sec.id='techDetailSection';
+  const title=el('div','detail-section-title');
+  title.append(document.createTextNode('Scanner Pine — 4H · Diário · Semanal'),el('small','',`score ≥ ${CONFIG.TECH_MIN_SCORE} · cooldown ${CONFIG.TECH_COOLDOWN}`));
+  sec.append(title);
+
   const a=state.techAnalyses.get(c.id);
   if(!a){sec.append(el('div','detail-loading','A carregar candles Binance e a calcular o scanner…'));return sec;}
   if(!a.available){sec.append(el('div','detail-error','Scanner indisponível: '+a.reason+'.'));return sec;}
+
   const grid=el('div','tech-detail-grid');
   for(const tf of ['4H','1D','1W']){
-    const r=a.timeframes?.[tf],card=el('div','tech-tf-card'),head=el('div','tech-tf-head'),name=el('div','tech-tf-name',tf),stateEl=el('div','tech-state'+(r?.direction?' '+r.direction.toLowerCase():''),r?.direction||'SEM SINAL');head.append(name,stateEl);card.append(head);
-    if(r){const scores=el('div','tech-scores');scores.append(el('span','buy','BUY '+r.scoreBuy),el('span','sell','SELL '+r.scoreSell));card.append(scores);const reasons=r.direction?r.criteria:(r.scoreBuy>=r.scoreSell?r.buyCriteria:r.sellCriteria);card.append(el('div','tech-reasons',(reasons||[]).join(' · ')||'sem confluências suficientes'));card.append(el('div','tech-source','vela fechada: '+new Date(r.closeTime).toLocaleString('pt-PT')));}
+    const r=a.timeframes?.[tf],card=el('div','tech-tf-card'),head=el('div','tech-tf-head');
+    const name=el('div','tech-tf-name',tf);
+    const stateEl=el('div','tech-state'+(r?.direction?' '+r.direction.toLowerCase():''),r?.direction||'SEM SINAL');
+    head.append(name,stateEl);card.append(head);
+    if(r){
+      const scores=el('div','tech-scores');
+      scores.append(el('span','buy','BUY '+r.scoreBuy),el('span','sell','SELL '+r.scoreSell));
+      card.append(scores);
+      const reasons=r.direction?r.criteria:(r.scoreBuy>=r.scoreSell?r.buyCriteria:r.sellCriteria);
+      card.append(el('div','tech-reasons',(reasons||[]).join(' · ')||'sem confluências suficientes'));
+      card.append(el('div','tech-source',`CVD Δ taker (base): ${fmtSignedNum(r.cvdDelta)} · vela fechada: ${new Date(r.closeTime).toLocaleString('pt-PT')}`));
+    }
     grid.append(card);
   }
-  sec.append(grid,el('div','tech-source','Fonte técnica: '+a.pair+' · Binance Spot USDT.')); return sec;
+  sec.append(grid,el('div','tech-source','Fonte técnica: '+a.pair+' · Binance Spot USDT · CVD = taker buy base − taker sell base.'));
+
+  const w=state.whaleAnalyses.get(c.id);
+  const whaleBox=el('div','whale-card');
+  whaleBox.append(el('div','tech-tf-head',''));
+  const wh=whaleBox.firstChild;
+  wh.append(el('div','tech-tf-name','Whale Flow ≥ $1M'));
+  if(!w){
+    wh.append(el('div','tech-state','A ANALISAR'));
+    whaleBox.append(el('div','tech-reasons','A consultar os aggTrades mais recentes…'));
+  }else if(!w.available){
+    wh.append(el('div','tech-state','INDISPONÍVEL'));
+    whaleBox.append(el('div','tech-reasons',w.reason||'dados indisponíveis'));
+  }else{
+    const cls=w.direction==='BUY'?' whale-buy':w.direction==='SELL'?' whale-sell':'';
+    wh.append(el('div','tech-state'+cls,w.direction?'WHALE '+w.direction:'SEM FLUXO DIRECIONAL'));
+    const ratio=w.gross>0?Math.round((w.direction==='SELL'?1-w.buyRatio:w.buyRatio)*100):0;
+    whaleBox.append(el('div','tech-reasons',
+      `${w.whaleCount} negócios ≥ $1M · buy ${fmtUSDT(w.buyVolume)} · sell ${fmtUSDT(w.sellVolume)} · net ${fmtUSDT(w.net)}${w.direction?' · '+ratio+'% '+w.direction:''}`));
+    whaleBox.append(el('div','tech-source',
+      `${w.observedTrades} aggTrades recentes observados · cobertura temporal ${fmtDuration(w.coverageMs)} · máximo ${fmtUSDT(w.maxNotional)}`));
+  }
+  sec.append(whaleBox);
+  return sec;
 }
-function appendTechnicalDetail(c){const old=detailBody.querySelector('#techDetailSection');if(old)old.remove();detailBody.append(buildTechnicalDetailSection(c));}
+function appendTechnicalDetail(c){
+  const old=detailBody.querySelector('#techDetailSection');if(old)old.remove();
+  detailBody.append(buildTechnicalDetailSection(c));
+}
 async function ensureCoinTechnical(c){
   const token=state.detailRequestToken,id=c.id; appendTechnicalDetail(c);
-  const a=await analyzeCoinTechnical(c); if(token!==state.detailRequestToken||coinModal.hidden||state.detailCoinId!==id)return a; appendTechnicalDetail(c); return a;
+  const a=await analyzeCoinTechnical(c);
+  if(a?.available&&a.pair) await analyzeCoinWhale(c,a.pair);
+  if(token!==state.detailRequestToken||coinModal.hidden||state.detailCoinId!==id)return a;
+  appendTechnicalDetail(c); return a;
 }
 
 function scheduleNext(){
@@ -830,7 +1132,7 @@ async function requestNotifications(){
   if(!('Notification' in window)){notifyBtn.textContent='Notificações indisponíveis';return;}
   try{
     const permission=await Notification.requestPermission();
-    if(permission==='granted'){notifyBtn.textContent='Notificações ativas';notifyBtn.disabled=true;toast('Ativas para sinais detetados enquanto a aplicação estiver a executar.','NOTIFICAÇÕES');}
+    if(permission==='granted'){notifyBtn.textContent='Notificações ativas';notifyBtn.disabled=true;toast('Ativas para sinais Pine e Whale Flow detetados enquanto a aplicação estiver a executar.','NOTIFICAÇÕES');}
     else notifyBtn.textContent=permission==='denied'?'Notificações bloqueadas':'Ativar notificações';
   }catch(_){notifyBtn.textContent='Tentar ativar notificações';}
 }
